@@ -10,6 +10,13 @@ The project examines how faithfully formal definitions and theorem statements in
 
 The initial focus is Chapter 5: Permutations. I am reading the mathematics alongside the Lean code, recording explanations, differences in representation, and questions requiring further investigation.
 
+## My contributions
+This repository is a fork repository from 
+https://github.com/facebookresearch/algebraic-combinatorics
+I have added files and folders of my own, with _Tiff at end of the folder/file name as identification.
+UPSTREAM_README.md is my readme for my contribution.
+
+
 ## What I am looking at
 
 - Whether formal definitions preserve the textbook’s intended meaning.
