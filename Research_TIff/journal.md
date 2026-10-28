@@ -310,13 +310,15 @@ The alternative development makes the reasoning more visible locally. This suppo
 
 ### Source and validation status
 
-Tiffany reported further edits to the Lean file today. The supplied link returned blob `34b391a01fad9094bf8eb23e735377e2d7e07407`, unchanged from the previously reviewed version. The older conjugation annotation and existence-statement comment are still present in that retrieved version.
+The first check returned the previously reviewed source. A subsequent check confirmed today's edits on GitHub, with blob `d7e32c83b0e2e4c86ba27b808e8ec569248c866b`.
 
-The revised wording is therefore recorded as prepared in discussion, with publication of the latest Lean edits not yet verified. No new compilation or proof implementation was verified today.
+Verified the revised conjugation annotation, the added `#check Equiv.permCongrHom`, removal of the “trivial/useful” labels, and the revised explanation of the existence conclusion. Updated the notebook to reflect confirmed publication.
+
+No compilation result was independently verified. The alternative construction now ends at line 490, and the permutation-notations section starts at line 493.
 
 ### Next steps
 
-1. Save and commit the revised Lean annotations, then confirm that GitHub shows the intended version.
+1. Publication of the revised annotations is confirmed; retain the source version reference for the essay.
 2. Compile the edited module and record the result.
 3. Continue after the conjugation section at the student's pace.
 4. Keep statement fidelity, proof reuse and readability distinct in the essay analysis.
