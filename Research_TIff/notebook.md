@@ -3,7 +3,7 @@
 **Topic:** Permutations and autoformalisation  
 **Supervisor:** Christian Ikenmeyer  
 **Established:** 26 October 2026  
-**Last updated:** 27 October 2026
+**Last updated:** 28 October 2026
 
 ## Purpose and working scope
 
@@ -661,9 +661,71 @@ Capture commit permalinks before citing exact lines in the essay.
 
 Separate folders aid comparison, but copies retaining the same namespace and declaration names may conflict if imported together. This has not been tested.
 
+## Follow-up — 28 October 2026: understanding the conjugation construction
+
+**Related findings:** P5-006 and P5-007.  
+**Location:** `AlgebraicCombinatorics/Permutaions_Tiff/Basics.lean`, conjugation section, lines 308–470 in the retrieved version.
+
+### Reading the type rather than the name
+
+The suffix `Hom` in `permCongrHom` prompted a question about whether the construction gives only a homomorphism. The relevant distinction is in the type: for groups, `G →* H` denotes a homomorphism, while `G ≃* H` denotes an isomorphism.
+
+To inspect the library declaration in Lean:
+
+```lean
+#check Equiv.permCongrHom
+```
+
+Hovering over the declaration also displays its type. These checks were explained in discussion; their execution by Tiffany has not been verified.
+
+### Proof reuse and the reader's experience
+
+Tiffany's initial impression was that the section first assumes conjugation is an isomorphism and then proves that it is one. The discussion clarified that `f.permCongrHom` supplies an already established construction, including the evidence required by its type.
+
+This explains the short subsequent proofs:
+
+| Declaration suffix | Role |
+|---|---|
+| `_apply` | Definitional equality, proved by `rfl`. |
+| `_isPerm`, `_apply_val` | Explicit descriptions of the underlying conjugation map. |
+| `_bijective`, `_mul` | Properties obtained from the bundled isomorphism. |
+| `_one` | A general consequence of preserving the group operation. |
+| `_symm`, `_self` | Identification of the inverse and the self-equivalence case. |
+| `_iso_of_equiv` | An existence statement witnessed by the constructed isomorphism. |
+
+The central presentation concern remains: a reader following the textbook may want to see why the conjugation formula preserves multiplication and is bijective. The original version reuses the library construction, whereas Tiffany's alternative makes more of that reasoning visible within this file.
+
+### Revised annotation prepared in discussion
+
+The annotation was rewritten to explain the construction first, then the role of subsequent lemmas, then the motivation for the alternative proof. It distinguishes `permCongr` and `permCongrHom` by the structure they package: the underlying map is the same, and multiplication preservation is included explicitly in the latter's bundled type.
+
+The revised interpretation replaces the earlier conjecture about uniqueness of conjugation and the concern about circularity. The alternative proof is described as a more explicit mathematical presentation; greater semantic fidelity has not been established.
+
+When polishing annotations, preserve Tiffany's viewpoint and develop the explanation for a future reader. Integrate necessary corrections into that explanation rather than writing a rebuttal to the original draft.
+
+### The precise existence conclusion
+
+```lean
+theorem symmetricGroup_iso_of_equiv {X Y : Type*} (f : X ≃ Y) :
+    Nonempty (SymmetricGroup X ≃* SymmetricGroup Y) :=
+  ⟨symmetricGroup_conj_iso f⟩
+```
+
+In English: **Given a bijection between X and Y, there exists a group isomorphism between their symmetric groups.**
+
+This states the existence conclusion of Proposition 5.1.3 without specifying the isomorphism's action. Its proof chooses the conjugation construction as the witness. This distinction concerns what the statement explicitly asserts, even though the proof uses the intended map.
+
+### Publication and validation status
+
+On 28 October, the supplied main-branch link returned blob `34b391a01fad9094bf8eb23e735377e2d7e07407`, the same content identifier recorded on 27 October. It still contains the earlier annotation about circularity and the comment describing the existence statement as equivalent to the proposition.
+
+Tiffany reports further edits today, but those edits are not visible in the retrieved version. The revised annotation is recorded here as prepared in discussion, not as a verified committed source change. No new proof implementation or compilation is claimed.
+
+Both `Research_TIff/notebook.md` and `Research_TIff/journal.md` now contain the migrated documents. These GitHub files are the intended working copies for future updates.
+
 ## Next reading session
 
-- Review and correct the comments identified in P5-006.
+- Confirm that today's revised conjugation annotation has been saved and committed; the retrieved Lean file still shows the earlier wording.
 - Compile the edited module in the project environment.
 - Compare the explicit construction in P5-007 with the library construction, checking both the formula and proof obligations.
 - Keep a pinned upstream baseline.
@@ -733,6 +795,6 @@ The main-branch links can change. Capture a commit permalink before citing this 
 
 ### Related documents
 
-- [Research journal](https://docs.google.com/document/d/1Y5P9OM4Qe5xq7JPEzy1DIlsFpkWafolj3K_If1t24N8)
+- [Research journal](journal.md)
 - [2026–2028 Mathematics Research & PhD Application Timeline](https://docs.google.com/document/d/1r4yN4jOON0d08nAcOmCthaBc9y8rD0ZH0N2gTO8XUsU/edit)
 - [Earlier research notes — Two Coherence Failures](https://docs.google.com/document/d/1gVgsUDOLMvUlcc02AGaF4GSMI-gJ5MCndCk_M9tr2lg/edit)
