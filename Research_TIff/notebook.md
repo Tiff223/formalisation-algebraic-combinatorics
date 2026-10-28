@@ -717,20 +717,22 @@ This states the existence conclusion of Proposition 5.1.3 without specifying the
 
 ### Publication and validation status
 
-On 28 October, the supplied main-branch link returned blob `34b391a01fad9094bf8eb23e735377e2d7e07407`, the same content identifier recorded on 27 October. It still contains the earlier annotation about circularity and the comment describing the existence statement as equivalent to the proposition.
+The first check on 28 October returned the previously reviewed version. A subsequent check confirmed the new published source, blob `d7e32c83b0e2e4c86ba27b808e8ec569248c866b`.
 
-Tiffany reports further edits today, but those edits are not visible in the retrieved version. The revised annotation is recorded here as prepared in discussion, not as a verified committed source change. No new proof implementation or compilation is claimed.
+The revised main annotation is now present, along with `#check Equiv.permCongrHom` at line 310. The existence-conclusion annotation follows `symmetricGroup_iso_of_equiv` at line 416. The earlier “trivial/useful” labels have been removed from the surrounding lemmas. The alternative construction ends at line 490; the permutation-notations section now begins at line 493.
+
+Publication of these edits is confirmed. The presence of a `#check` command is source evidence, not a recorded execution result; compilation has not been independently verified.
 
 Both `Research_TIff/notebook.md` and `Research_TIff/journal.md` now contain the migrated documents. These GitHub files are the intended working copies for future updates.
 
 ## Next reading session
 
-- Confirm that today's revised conjugation annotation has been saved and committed; the retrieved Lean file still shows the earlier wording.
+- Publication of today's revised conjugation annotation is confirmed; record compilation results next.
 - Compile the edited module in the project environment.
 - Compare the explicit construction in P5-007 with the library construction, checking both the formula and proof obligations.
 - Keep a pinned upstream baseline.
 - Decide how to avoid importing duplicate declarations.
-- Resume reading after line 470 at Tiffany’s pace.
+- Resume at the permutation-notations section (line 493 in the 28 October version) at Tiffany’s pace.
 - Continue distinguishing explanatory improvements from semantic errors.
 
 ## Reusable finding record
