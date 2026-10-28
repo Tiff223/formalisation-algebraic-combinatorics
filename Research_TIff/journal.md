@@ -1,7 +1,7 @@
 # MA395 Research Journal
 
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 27 October 2026
+**Last updated:** 28 October 2026
 
 This journal records daily progress, decisions and next steps.
 
@@ -287,3 +287,36 @@ The notebook records file-content hashes and the need for commit permalinks.
 6. Commit the Markdown notebook and journal after reviewing their previews.
 
 Continue checking the textbook meaning as well as Lean’s acceptance of the code.
+
+## 28 October 2026 — Clarifying proof reuse and revising annotations
+
+### Completed today
+
+Revisited the conjugation section of Proposition 5.1.3. Clarified that `f.permCongrHom` provides a group isomorphism, as indicated by its `≃*` type. Discussed checking the type by hovering or using `#check Equiv.permCongrHom`.
+
+Distinguished the role of the later lemmas: unfolding the formula, retrieving properties of the bundled isomorphism, applying general group results, and identifying the inverse or special cases.
+
+Rewrote the main annotation in discussion around Tiffany's concern about the visibility of the mathematical argument. The revised wording explains the library construction and then motivates the step-by-step alternative proof.
+
+Stated `symmetricGroup_iso_of_equiv` precisely in English: given a bijection between X and Y, their symmetric groups are isomorphic. Distinguished this existence conclusion from a statement specifying the conjugation map.
+
+Confirmed that the notebook and journal are populated in `Research_TIff` on GitHub, and updated both with today's discussion and verification status.
+
+### Observations
+
+The original construction reuses an existing isomorphism and its proofs. Its short subsequent lemmas expose the formula and properties for readers and later proofs.
+
+The alternative development makes the reasoning more visible locally. This supports an observation about mathematical exposition; it does not establish a new semantic error or greater fidelity merely from having more proof steps.
+
+### Source and validation status
+
+Tiffany reported further edits to the Lean file today. The supplied link returned blob `34b391a01fad9094bf8eb23e735377e2d7e07407`, unchanged from the previously reviewed version. The older conjugation annotation and existence-statement comment are still present in that retrieved version.
+
+The revised wording is therefore recorded as prepared in discussion, with publication of the latest Lean edits not yet verified. No new compilation or proof implementation was verified today.
+
+### Next steps
+
+1. Save and commit the revised Lean annotations, then confirm that GitHub shows the intended version.
+2. Compile the edited module and record the result.
+3. Continue after the conjugation section at the student's pace.
+4. Keep statement fidelity, proof reuse and readability distinct in the essay analysis.
