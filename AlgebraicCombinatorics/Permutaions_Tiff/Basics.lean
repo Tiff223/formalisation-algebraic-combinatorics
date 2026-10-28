@@ -307,48 +307,67 @@ from `S_X` to `S_Y`. -/
     Furthermore, the map `S_f : S_X → S_Y, σ ↦ f ∘ σ ∘ f⁻¹` is a group isomorphism. -/
 def symmetricGroup_conj_iso {X Y : Type*} (f : X ≃ Y) : SymmetricGroup X ≃* SymmetricGroup Y :=
   f.permCongrHom
-/-MA395 note:
-  -- `≃*` is the notation for a group isomorphism, which is a bijective homomorphism.
+#check Equiv.permCongrHom
+/- MA395 note:
 
-  -- `permCongrHom` is a function that takes a permutation of X and returns a permutation
-   of Y by conjugation with f. This is group-theory related, which is different from
-   `permCongr` which do the same thing but is not a group homomorphism. It is used
-   when working purely with logic, sets, or basic equivalences, when you do not want
-   to force group theory dependencies. This is used in the theorem `symmetricGroup_conj_iso_apply`
-  below, which is a more basic result than the group isomorphism.
+Understanding the construction
+------------------------------
 
+Here, `≃*` denotes a group isomorphism: a bijection that preserves
+multiplication.
 
-`Important:`
-  Why did it use conjugation to define the isomorphism and later use this result to prove that
-  conjugation is an isomorphism? This feels paradoxical. Possible reason: conjugation is
-  the only isomorphism between symmetric groups, so it is equivalent to define the
-  isomorphism as conjugation. But that is not how the proof should be: we should define general
-  isomorphism first them prove that conjugation is an isomorphism. Following the hypothesis of
-  the proposition, we should derive every lemma using bijectivity of f.
+Given a bijection f : X ≃ Y, conjugation sends each permutation σ
+of X to the permutation f ∘ σ ∘ f⁻¹ of Y.
 
-There is an apparent circularity in how this relationship is structured:
-`symmetricGroup_conj_iso` is defined *directly* via conjugation (`f.permCongr`),
-yet subsequent lemmas—such as `symmetricGroup_conj_iso_apply`—then state that
-this isomorphism evaluates to conjugation. From a traditional narrative standpoint, one would
-first define the abstract group isomorphism induced by a set equivalence X ≃ Y and subsequently *prove*
-that conjugation is its concrete realization.
+The library provides two ways to package this map:
+• `f.permCongr` gives an equivalence between the permutation types.
+• `f.permCongrHom` gives the same equivalence together with a proof
+  that it preserves multiplication, making it a group isomorphism.
 
-In this implementation, however, the definition of the map is unified with its
-operational behavior. As a result, identity lemmas like `symmetricGroup_conj_iso_apply`
-serve as definitional unfoldings rather than substantive theorems, which may obscure
-the underlying structural progression.
+Thus, defining `symmetricGroup_conj_iso` as `f.permCongrHom` already
+supplies the isomorphism required by Proposition 5.1.3. The main
+construction and its supporting proofs come from the library.
 
-I have included a small note at the end of each lemma to show whether it is trivial or useful.
-The trivial ones are usually just unfolding the definition
+How the subsequent lemmas fit together
+--------------------------------------
 
-I included a formalization of proposition 5.1.3 at the end of this section, which breaks the proof
-into three parts: homomorphism, injective, and surjective. I believe is a more faithful formalization.
+When I first read this section, the order seemed circular:
+conjugation was introduced as an isomorphism, and later lemmas
+appeared to prove that it was an isomorphism.
+
+The explanation is that these later lemmas expose facts about an
+already established construction. For example,
+`symmetricGroup_conj_iso_apply` unfolds its action, while the
+bijectivity and multiplication-preservation lemmas retrieve
+properties already supplied by the bundled isomorphism.
+
+These lemmas make individual parts of the textbook proposition
+explicit and provide named results for later use. However, a reader
+looking for the mathematical argument must inspect the underlying
+library construction.
+
+My alternative presentation
+---------------------------
+
+For a reader following the textbook, I would find it clearer to
+start with the conjugation formula and then establish why it gives
+a group isomorphism.
+
+I have therefore added an alternative development of Proposition
+5.1.3 at the end of this section. Starting with a bijection f and
+a map specified by the conjugation formula, I prove multiplication
+preservation, injectivity and surjectivity separately, then
+construct the bundled group isomorphism.
+
+This makes the progression from the hypothesis to the conclusion
+more visible. My concern is the accessibility of the mathematical
+argument: the original version efficiently reuses a library result,
+whereas my version displays more of the reasoning within this file.
 -/
 
 /-- The conjugation isomorphism sends `σ` to `f ∘ σ ∘ f⁻¹`. -/
 theorem symmetricGroup_conj_iso_apply {X Y : Type*} (f : X ≃ Y) (σ : Permutation X) :
     symmetricGroup_conj_iso f σ = f.permCongr σ := rfl
--- MA395 note: Trivial, should be definition of conjugation
 
 /-- For each permutation `σ` of `X`, the map `f ∘ σ ∘ f⁻¹ : Y → Y` is a permutation of `Y`.
     This is the first part of prop.perm.Sf. -/
@@ -364,8 +383,6 @@ theorem symmetricGroup_conj_isPerm {X Y : Type*} (f : X ≃ Y) (σ : Permutation
   There are other equivalent ways to prove that `f ∘ σ ∘ f⁻¹` is a permutation of `Y`, for example,
   we can show that `f ∘ σ ∘ f⁻¹` is bijective, which is equivalent to being a permutation. But the
   above way is more direct and easier to formalize in Lean.
-
-  -- MA395 note: Useful lemma
 -/
 
 /-- The conjugation map explicitly: `S_f(σ)(y) = f(σ(f⁻¹(y)))`. -/
@@ -373,40 +390,44 @@ theorem symmetricGroup_conj_isPerm {X Y : Type*} (f : X ≃ Y) (σ : Permutation
 theorem symmetricGroup_conj_iso_apply_val {X Y : Type*} (f : X ≃ Y) (σ : Permutation X) (y : Y) :
     symmetricGroup_conj_iso f σ y = f (σ (f.symm y)) := by
   simp [symmetricGroup_conj_iso, Equiv.permCongrHom, Equiv.permCongr_apply]
--- MA395 note: trivial from definition of conjugation
 
 /-- The conjugation isomorphism is bijective (part of being an isomorphism). -/
 theorem symmetricGroup_conj_iso_bijective {X Y : Type*} (f : X ≃ Y) :
     Function.Bijective (symmetricGroup_conj_iso f) :=
   (symmetricGroup_conj_iso f).bijective
--- MA395 note: trivial from definition
 
 /-- The conjugation isomorphism is a group homomorphism (part of being an isomorphism). -/
 theorem symmetricGroup_conj_iso_mul {X Y : Type*} (f : X ≃ Y) (σ τ : Permutation X) :
     symmetricGroup_conj_iso f (σ * τ) = symmetricGroup_conj_iso f σ * symmetricGroup_conj_iso f τ :=
   (symmetricGroup_conj_iso f).map_mul σ τ
--- MA395 note: trivial from definition
 
 /-- The conjugation isomorphism preserves identity. -/
 theorem symmetricGroup_conj_iso_one {X Y : Type*} (f : X ≃ Y) :
     symmetricGroup_conj_iso f 1 = 1 :=
   (symmetricGroup_conj_iso f).map_one
--- MA395: useful lemma
 
 /-- The inverse of the conjugation isomorphism is conjugation by `f⁻¹`. -/
 theorem symmetricGroup_conj_iso_symm {X Y : Type*} (f : X ≃ Y) :
     (symmetricGroup_conj_iso f).symm = symmetricGroup_conj_iso f.symm := by
   ext σ y
   simp [symmetricGroup_conj_iso, Equiv.permCongrHom]
--- MA395 note: useful lemma
 
 /-- Symmetric groups of bijective sets are isomorphic. (Conclusion of prop.perm.Sf) -/
 theorem symmetricGroup_iso_of_equiv {X Y : Type*} (f : X ≃ Y) :
     Nonempty (SymmetricGroup X ≃* SymmetricGroup Y) :=
   ⟨symmetricGroup_conj_iso f⟩
-/- MA395 note: This is the proposition.
-here an equivalent statement is proven: there exists a group isomorphism between
- symmetric groups of bijective sets. -/
+/- MA395 note:
+The subtle point is it proved an existence conclusion, but not the exact conclusion of
+prop.perm.SF.This says:
+Given a bijection between X and Y, there exists a group
+isomorphism between their symmetric groups. This states the
+existence conclusion of Proposition 5.1.3 without specifying
+the isomorphism's action.
+This statement does not itself assert that the isomorphism is the
+conjugation map, although its proof uses that construction. It uses the conjugation
+map as an element of the set of isomorphisms between bijective sets to claim that
+the set of isomorphisms is nonempty.
+-/
 
 /-- If `Y = X` in prop.perm.Sf, then `S_f` is conjugation by `f` in the group `S_X`.
     (Remark after prop.perm.Sf) -/
@@ -414,7 +435,6 @@ theorem symmetricGroup_conj_iso_self {X : Type*} (f : SymmetricGroup X) (σ : Pe
     symmetricGroup_conj_iso f σ = f * σ * f⁻¹ := by
   ext x
   simp [symmetricGroup_conj_iso, Equiv.permCongrHom]
--- MA395 note: useful lemma, shows the remark made by the author
 
 ------------------------------------------------------------------------
 /--Prosposition 5.1.3 formalised by myself, break the proof of isomorphism into three parts: homomorphism,

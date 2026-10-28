@@ -96,24 +96,11 @@ to `α(β(x))`. In Mathlib, `(α * β) x = α (β x)`.
 In Mathlib, this is `Equiv.Perm X := X ≃ X`, i.e., the type of equivalences from `X` to `X`. -/
 abbrev Permutation (X : Type*) := Equiv.Perm X
 
--- MA395 note:
--- abbrev: This tells Lean that we are giving an existing expression another name.
--- Permutation: new name
--- Type* : This is a type of types, think of it as a collection of objects.
--- Equiv.Perm X: An existing library name, represents equivalences from `X` to itself
-
-
 /-- The symmetric group of a type `X` is the group of all permutations of `X`.
     (def.perm.perm (b))
 
     In Mathlib, this is `Equiv.Perm X` with its natural `Group` instance. -/
 abbrev SymmetricGroup (X : Type*) := Equiv.Perm X
-
--- MA395 note:
--- Note we have the exact same definition as Permutation,
--- another name for `Equiv.Perm X`, emphasising its group structure.
--- The group operation is composition of permutations.
-
 
 /-! ### The n-th symmetric group (def.perm.Sn-iven)
 
@@ -146,23 +133,6 @@ In Lean, we represent this as `Equiv.Perm (Fin n)`, the group of permutations of
 The size of `S_n` is `n!` (see `sn_card`). -/
 abbrev Sn (n : ℕ) := Equiv.Perm (Fin n)
 
-/- MA395 note:
-`Sn n` could also be defined as `Permutation (bracketN n)`.
-Unfolding these abbreviations gives `Equiv.Perm (Fin n)`,
-so both definitions have exactly the same meaning.
-Using the earlier abbreviations would make the connection
-to the textbook notation clearer.
-Using the library names directly makes the underlying
-representation immediately visible.
-
-The authors introduce textbook-style abbreviations but
-do not consistently build later definitions using them.
-We can relate Sn and Permutation of `[n]`:
-`abbrev Sn (n : ℕ) := Permutation (bracketN n)`
-Using standard library names may improve readability and
-reuse for library users. The choice depends on the intended audience.
--/
-
 -- Verify that the symmetric group is indeed a group (def.perm.perm (b))
 example {X : Type*} : Group (Equiv.Perm X) := inferInstance
 
@@ -170,18 +140,6 @@ example {X : Type*} : Group (Equiv.Perm X) := inferInstance
 theorem symmetricGroup_card (X : Type*) [Fintype X] [DecidableEq X] :
     Fintype.card (Equiv.Perm X) = Nat.factorial (Fintype.card X) :=
   Fintype.card_perm
-
-/-
-  MA395 note:
-  `Fintype.card` can be read as finite type cardinality,
-  i.e., the number of elements in a finite type.
-  `DecidableEq X` is a hypothesis that `X` has decidable equality,
-  Lean has a way to decide whether any two elements of `X` are equal,
-  which is needed for the cardinality of permutations.
-
- Altenatively, we can abbreviate the statement as:
-  `Fintype.card (SymmetricGroup X) = Nat.factorial (Fintype.card X) :=`
--/
 
 /-- The symmetric group `S_n` has `n!` elements. (def.perm.Sn-iven)
 
@@ -211,13 +169,6 @@ theorem bracketN_card (n : ℕ) : Fintype.card (bracketN n) = n :=
 
 /-- `S_n` is a finite group. -/
 instance sn_fintype (n : ℕ) : Fintype (Sn n) := inferInstance
-
-/- MA395 note:
-`instance` registers information that Lean can use automatically.
-Here, it supplies a finite enumeration of all permutations in `Sn n`.
-`inferInstance` obtains this from instances already in the library.
-This does not state how many permutations there are; `sn_card` does that.
--/
 
 /-- `S_n` has decidable equality. -/
 instance sn_decidableEq (n : ℕ) : DecidableEq (Sn n) := inferInstance
