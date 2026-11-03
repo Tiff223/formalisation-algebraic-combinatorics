@@ -1,7 +1,7 @@
 # MA395 Research Journal
 
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 28 October 2026
+**Last updated:** 3 November 2026
 
 This journal records daily progress, decisions and next steps.
 
@@ -322,3 +322,27 @@ No compilation result was independently verified. The alternative construction n
 2. Compile the edited module and record the result.
 3. Continue after the conjugation section at the student's pace.
 4. Keep statement fidelity, proof reuse and readability distinct in the essay analysis.
+
+## 3 November 2026 — Statement fidelity and preliminary notation review
+
+### Completed today
+
+Resumed reading around the permutation-notations section and screened two-line notation, one-line notation and the cycle digraph. Tiffany's initial impression was that the definitions were handled reasonably well; she noticed no major problems in this preliminary pass. The process felt tedious, so detailed inspection is deferred.
+
+Discussed how the purpose of textbook formalisation affects its evaluation. Distinguished mathematical fidelity, explanatory presentation and library reuse.
+
+Read Proposition 5.1.3 in the extracted text of textbook page 271 and confirmed its two claims: conjugation produces a permutation of Y, and the resulting map between symmetric groups is an isomorphism.
+
+Prepared a revised annotation and a combined Lean statement with an explicit definition of group isomorphism. The draft keeps both claims together and leaves the proofs open with two `sorry` placeholders.
+
+### Decisions and status
+
+Prioritise accurate theorem statements over completing proofs. Supporting proof lemmas can be added later; the immediate aim is to assess whether an AI-generated statement captures the source.
+
+Added P5-008 to the notebook to preserve this methodological direction and the draft statement. Today's screening is not a completed verification, and the earlier cycle-digraph lead remains open.
+
+No compilation or publication of today's Lean draft was checked. No new mathematical error was established.
+
+### Next session — 4 November
+
+Reread the three notations in detail, comparing the definitions with the textbook and testing small examples. Revisit the open cycle-digraph question without treating the preliminary impression as a final assessment. Proof completion for Proposition 5.1.3 remains optional.
