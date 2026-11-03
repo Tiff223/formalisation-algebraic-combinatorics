@@ -310,59 +310,63 @@ def symmetricGroup_conj_iso {X Y : Type*} (f : X ≃ Y) : SymmetricGroup X ≃* 
 #check Equiv.permCongrHom
 /- MA395 note:
 
-Understanding the construction
-------------------------------
+Proposition 5.1.3 and the purpose of formalisation
 
-Here, `≃*` denotes a group isomorphism: a bijection that preserves
-multiplication.
+What this declaration expresses
+-------------------------------
 
-Given a bijection f : X ≃ Y, conjugation sends each permutation σ
-of X to the permutation f ∘ σ ∘ f⁻¹ of Y.
+The input `f : X ≃ Y` explicitly supplies the assumption that
+there is a bijection between X and Y. The output type
+`SymmetricGroup X ≃* SymmetricGroup Y` requires a group isomorphism
+between their symmetric groups.
 
-The library provides two ways to package this map:
-• `f.permCongr` gives an equivalence between the permutation types.
-• `f.permCongrHom` gives the same equivalence together with a proof
-  that it preserves multiplication, making it a group isomorphism.
+The definition supplies this isomorphism using `f.permCongrHom`,
+an existing library construction whose action is
+σ ↦ f ∘ σ ∘ f⁻¹. Its required properties are already proved in
+the library. The subsequent lemmas expose its formula and
+properties under the names used in this file.
 
-Thus, defining `symmetricGroup_conj_iso` as `f.permCongrHom` already
-supplies the isomorphism required by Proposition 5.1.3. The main
-construction and its supporting proofs come from the library.
-
-How the subsequent lemmas fit together
---------------------------------------
-
-When I first read this section, the order seemed circular:
-conjugation was introduced as an isomorphism, and later lemmas
-appeared to prove that it was an isomorphism.
-
-The explanation is that these later lemmas expose facts about an
-already established construction. For example,
-`symmetricGroup_conj_iso_apply` unfolds its action, while the
-bijectivity and multiplication-preservation lemmas retrieve
-properties already supplied by the bundled isomorphism.
-
-These lemmas make individual parts of the textbook proposition
-explicit and provide named results for later use. However, a reader
-looking for the mathematical argument must inspect the underlying
-library construction.
-
-My alternative presentation
+Evaluating this presentation
 ---------------------------
 
-For a reader following the textbook, I would find it clearer to
-start with the conjugation formula and then establish why it gives
-a group isomorphism.
+My initial concern was that the definition already supplies the
+isomorphism that the proposition asks us to establish, leaving
+little mathematical argument visible in the subsequent proofs.
 
-I have therefore added an alternative development of Proposition
-5.1.3 at the end of this section. Starting with a bijection f and
-a map specified by the conjugation formula, I prove multiplication
-preservation, injectivity and surjectivity separately, then
-construct the bundled group isomorphism.
+This is an example of proof reuse. Whether this presentation is
+satisfactory depends on the purpose of the formalisation.
 
-This makes the progression from the hypothesis to the conclusion
-more visible. My concern is the accessibility of the mathematical
-argument: the original version efficiently reuses a library result,
-whereas my version displays more of the reasoning within this file.
+For preserving the mathematical content and obtaining a checked
+proof, reusing an existing construction is appropriate, provided
+it matches the textbook's assumptions and intended map. Here,
+the conjugation formula is made explicit by the application lemmas,
+although it is not visible in the definition's signature alone.
+
+For a reader learning alongside the textbook, the progression from
+a bijection f to an isomorphism of symmetric groups may be easier
+to follow if the conjugation map is introduced first and its
+properties are then established separately.
+
+My alternative development
+--------------------------
+
+I have added a development that starts with a map specified by the
+conjugation formula and proves multiplication preservation,
+injectivity and surjectivity separately, before constructing a
+bundled group isomorphism.
+
+Its purpose is to make more of the mathematical reasoning visible
+within this file. This offers an alternative exposition of the
+result, rather than establishing that the original formalisation
+has different mathematical content.
+
+Research question
+-----------------
+
+When evaluating a textbook formalisation, distinguish fidelity
+to the mathematical meaning from fidelity to the textbook's
+presentation. The importance of explanatory detail and library
+reuse should be assessed against the project's stated purpose.
 -/
 
 /-- The conjugation isomorphism sends `σ` to `f ∘ σ ∘ f⁻¹`. -/
@@ -437,57 +441,71 @@ theorem symmetricGroup_conj_iso_self {X : Type*} (f : SymmetricGroup X) (σ : Pe
   simp [symmetricGroup_conj_iso, Equiv.permCongrHom]
 
 ------------------------------------------------------------------------
-/--Prosposition 5.1.3 formalised by myself, break the proof of isomorphism into three parts: homomorphism,
-injective, and surjective.
+-- MA395
+/-!
+## Proposition 5.1.3 — Statement-first formalisation
 
-Define S_f as the conjugation of f, S_f is homomorphic.-/
-theorem symmetricGroup_conj_isom_hom {X Y : Type*} (f : X ≃ Y) (S_f : SymmetricGroup X → SymmetricGroup Y)
-    (h : ∀ σ : SymmetricGroup X, S_f σ = (f.symm.trans σ).trans f) (a b: SymmetricGroup X) :
-    S_f (a * b) = S_f a * S_f b := by
-    rw [h a, h b, h (a * b)]
-    ext y
-    simp
+The textbook makes two claims:
 
-/-- S_f isomorphism is injective. -/
-theorem symmetricGroup_conj_isom_injective {X Y : Type*} (f : X ≃ Y)
-    (S_f : SymmetricGroup X → SymmetricGroup Y)
-    (h : ∀ σ : SymmetricGroup X, S_f σ = (f.symm.trans σ).trans f) :
-    Function.Injective S_f := by
-  intro a b hab
-  rw [h a, h b] at hab
-  ext x
-  have h_eq := Equiv.congr_fun hab (f x)
-  simp at h_eq
-  exact h_eq
+1. Given a bijection f : X → Y and a permutation σ of X,
+   the function f ∘ σ ∘ f⁻¹ : Y → Y is a permutation of Y.
 
-/-- S_f isomorphism is surjective. -/
-theorem symmetricGroup_conj_isom_surjective {X Y : Type*} (f : X ≃ Y)
-    (S_f : SymmetricGroup X → SymmetricGroup Y)
-    (h : ∀ σ : SymmetricGroup X, S_f σ = (f.symm.trans σ).trans f) :
-    Function.Surjective S_f := by
-  intro τ
-  -- Construct the candidate inverse permutation in SymmetricGroup X
-  use (f.trans τ).trans f.symm
-  rw [h]
-  ext y
-  simp
+2. The resulting map S_f : S_X → S_Y, sending σ to
+   f ∘ σ ∘ f⁻¹, is a group isomorphism.
+   Consequently, S_X and S_Y are isomorphic.
 
-/-- Constructing the explicit group isomorphism from `S_f` -/
-def symmetricGroup_conj_MulEquiv {X Y : Type*} (f : X ≃ Y)
-    (S_f : SymmetricGroup X → SymmetricGroup Y)
-    (h : ∀ σ : SymmetricGroup X, S_f σ = (f.symm.trans σ).trans f) :
-    SymmetricGroup X ≃* SymmetricGroup Y where
-  toFun := S_f
-  invFun τ := (f.trans τ).trans f.symm
-  left_inv σ := by
-    rw [h]
-    ext x
-    simp
-  right_inv τ := by
-    rw [h]
-    ext y
-    simp
-  map_mul' := symmetricGroup_conj_isom_hom f S_f h
+The statement below records both claims explicitly.
+The proofs are left open so that the translation can first
+be evaluated against the textbook.
+-/
+
+/-- A map between groups is a group isomorphism if it is
+bijective and preserves multiplication. -/
+def IsGroupIsomorphism
+    {G H : Type*} [Group G] [Group H] (φ : G → H) : Prop :=
+  Function.Bijective φ ∧
+    ∀ a b : G, φ (a * b) = φ a * φ b
+
+/-- Proposition 5.1.3: a bijection f : X ≃ Y transports
+permutations of X to permutations of Y by conjugation,
+and the resulting map between symmetric groups is a
+group isomorphism. -/
+theorem symmetricGroup_conjugation_prop
+    {X Y : Type*} (f : X ≃ Y) :
+    -- Claim 1: each conjugated function is a permutation of Y.
+    (∀ σ : Permutation X,
+      Function.Bijective
+        (fun y : Y => f (σ (f.symm y)))) ∧
+    -- Claim 2: the map with this action is a group isomorphism.
+    (∃ S_f : SymmetricGroup X → SymmetricGroup Y,
+      (∀ (σ : Permutation X) (y : Y),
+        (S_f σ) y = f (σ (f.symm y))) ∧
+      IsGroupIsomorphism S_f) := by
+  constructor
+  · -- Prove that y ↦ f (σ (f⁻¹(y))) is bijective
+    -- for every permutation σ of X.
+    sorry
+  · -- Construct S_f with the specified conjugation formula,
+    -- then prove bijectivity and multiplication preservation.
+    sorry
+
+/- MA395 note:
+
+The assumption `f : X ≃ Y` supplies a bijection together with
+its inverse. In the first claim, conjugation is written as an
+ordinary function Y → Y, and bijectivity is asserted explicitly.
+
+The second claim specifies the action of S_f pointwise before
+asserting that it is a group isomorphism. Thus, it identifies
+the conjugation map rather than asserting only that some
+isomorphism between the symmetric groups exists.
+
+The conjunction records both claims in one theorem statement.
+Supporting lemmas can later establish the individual properties
+and be used to assemble the proof.
+
+Status: statement draft; both proof obligations remain open.
+-/
 -------------------------------------------------------------------------
 
 /-! ## Permutation notations (def.perm.notations)
@@ -660,6 +678,10 @@ The cycle digraph of σ ∈ S_n is a directed graph with:
 
 In Lean, we represent this as a `SimpleGraph` where there's an edge between i and j
 iff σ(i) = j (and i ≠ j to avoid self-loops in the SimpleGraph sense).
+/-MA395 note:
+Note that the textbook allows self-loops in the cycle digraph. Having or not that self-loop
+does not affect the connected components of the graph, which is the main property we care about.
+-/
 
 Note: The cycle digraph is naturally a directed graph, but for simplicity we can also
 consider the underlying undirected graph structure. -/
