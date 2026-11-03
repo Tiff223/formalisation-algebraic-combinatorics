@@ -3,7 +3,7 @@
 **Topic:** Permutations and autoformalisation  
 **Supervisor:** Christian Ikenmeyer  
 **Established:** 26 October 2026  
-**Last updated:** 28 October 2026
+**Last updated:** 3 November 2026
 
 ## Purpose and working scope
 
@@ -725,15 +725,73 @@ Publication of these edits is confirmed. The presence of a `#check` command is s
 
 Both `Research_TIff/notebook.md` and `Research_TIff/journal.md` now contain the migrated documents. These GitHub files are the intended working copies for future updates.
 
+## P5-008 — Purpose of formalisation and statement-first evaluation
+
+**Recorded:** 3 November 2026.  
+**Status:** Methodological observation and statement draft prepared in discussion; not a newly established translation error.  
+**Related findings:** P5-006 and P5-007.  
+**Source:** Darij Grinberg, *An Introduction to Algebraic Combinatorics*, p. 271, Proposition 5.1.3.
+
+### Evaluation should reflect the intended purpose
+
+Tiffany raised the question of what a textbook formalisation is meant to achieve. Preserving mathematical meaning, supporting readers, providing reusable library results and evaluating AI translation are related but distinct purposes.
+
+Distinguish **semantic fidelity** (preserving the objects, assumptions, specified constructions and conclusions) from **expository fidelity** (following the textbook's presentation). Library reuse can supply a correct proof without displaying the argument locally. More proof detail alone does not establish a more faithful statement.
+
+The next research question is to compare these criteria with the paper's stated objectives. Those objectives have not been re-examined in this session.
+
+### Revised priority: translate the proposition before proving it
+
+Tiffany's priority is now to state the source proposition explicitly, so its translation can be assessed independently of proof construction. Completing a proof is optional at this stage. For AI autoformalisation, a successful proof of a generated statement does not by itself establish agreement with the source.
+
+The PDF's extracted text on page 271 was read in this session. Proposition 5.1.3 has two claims:
+
+1. For a bijection f : X → Y and every permutation σ of X, the function f ∘ σ ∘ f⁻¹ : Y → Y is a permutation of Y.
+2. The resulting map S_f : S_X → S_Y with that action is a group isomorphism, yielding S_X ≅ S_Y.
+
+The proposed format keeps both claims in one theorem, with supporting proof lemmas available later. The first claim asserts bijectivity of an ordinary function, rather than starting with its output already bundled as a permutation. The second specifies the action of S_f and asserts that it is an isomorphism.
+
+### Statement draft prepared in discussion
+
+This uses the existing project abbreviations. It is not a standalone file, and the predicate should be declared only once in the relevant namespace.
+
+```lean
+def IsGroupIsomorphism
+    {G H : Type*} [Group G] [Group H] (φ : G → H) : Prop :=
+  Function.Bijective φ ∧
+    ∀ a b : G, φ (a * b) = φ a * φ b
+
+theorem symmetricGroup_conjugation_prop
+    {X Y : Type*} (f : X ≃ Y) :
+    (∀ σ : Permutation X,
+      Function.Bijective
+        (fun y : Y => f (σ (f.symm y)))) ∧
+    (∃ S_f : SymmetricGroup X → SymmetricGroup Y,
+      (∀ (σ : Permutation X) (y : Y),
+        (S_f σ) y = f (σ (f.symm y))) ∧
+      IsGroupIsomorphism S_f) := by
+  constructor
+  · sorry
+  · sorry
+```
+
+**Validation:** This is an unproved, uncompiled draft prepared in chat. Its publication in the Lean source has not been checked in this session. The two `sorry` placeholders deliberately leave proof obligations open.
+
+The conjunction records both claims but does not encode a sequential construction. A proof of the first goal is not automatically available in the second goal after `constructor`; a named lemma or a shared intermediate result can provide that dependency. The statement remains a candidate translation to assess, not a declaration that exact fidelity has already been established.
+
+## Preliminary reading — 3 November 2026: three permutation notations
+
+Tiffany screened the definitions of two-line notation, one-line notation and the cycle digraph, starting around the previously identified line 490. Her initial impression is that the definitions are handled reasonably well, and she noticed no major problems during this pass. She found the inspection tedious and plans a more detailed rereading on 4 November.
+
+**Evidence status:** Student-reported preliminary screening, not a completed comparison or verification. The earlier assistant-suggested cycle-digraph issue in P5-001 remains open; today's impression neither confirms nor resolves it.
+
 ## Next reading session
 
-- Publication of today's revised conjugation annotation is confirmed; record compilation results next.
-- Compile the edited module in the project environment.
-- Compare the explicit construction in P5-007 with the library construction, checking both the formula and proof obligations.
-- Keep a pinned upstream baseline.
-- Decide how to avoid importing duplicate declarations.
-- Resume at the permutation-notations section (line 493 in the 28 October version) at Tiffany’s pace.
-- Continue distinguishing explanatory improvements from semantic errors.
+- On 4 November, revisit two-line notation, one-line notation and the cycle digraph in detail, comparing each with the textbook.
+- Check indexing, retained information and small examples; revisit P5-001 as an open lead.
+- Evaluate the combined statement of Proposition 5.1.3 before spending time on its proof.
+- Check the paper's stated purpose before adopting evaluation criteria for the essay.
+- Record compilation or source-publication checks only when performed.
 
 ## Reusable finding record
 
