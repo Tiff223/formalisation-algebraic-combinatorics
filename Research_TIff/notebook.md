@@ -565,6 +565,10 @@ The mathematical strategy is coherent by inspection. Successful compilation of t
 
 ## Supporting learning notes and corrections
 
+### Type-theoretic foundations — 6 November 2026
+
+Lean uses dependent type theory as a foundation that brings mathematical objects, functions, propositions and proofs into a common framework. Through the propositions-as-types correspondence, a proof is represented by a term whose type is the proposition being proved, allowing Lean’s kernel to check it against the rules of the underlying theory ([Theorem Proving in Lean 4, §3.1](https://lean-lang.org/theorem_proving_in_lean4/Propositions-and-Proofs/); [Lean Language Reference, §2.3](https://lean-lang.org/doc/reference/latest/Elaboration-and-Compilation/)). Types also support inference and error detection, while dependent types express objects whose types depend on parameters, such as `Fin n`. Ordinary sets remain available within this framework: `s : Set X` denotes a set of elements of type `X`, and membership `x ∈ s` is distinct from the typing judgement `x : X` ([Mathematics in Lean, Chapter 4](https://leanprover-community.github.io/mathematics_in_lean/C04_Sets_and_Functions.html)). These features explain practical advantages of Lean’s foundation without implying that set theory is unsuitable for formalisation. For this project, the resulting distinction is important: translating the textbook’s set-based language into Lean requires choices of representation, whose faithfulness to the intended mathematics must be evaluated separately from whether the resulting proofs are accepted.
+
 | Command | What it introduces | How Lean treats it | Typical use |
 |---|---|---|---|
 | `def` | A named definition. | Lean can replace the name with its definition, but procedures such as instance search do not normally do this automatically. | Define a function or mathematical object, such as `oneLineNotation`. |
