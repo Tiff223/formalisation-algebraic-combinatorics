@@ -565,6 +565,12 @@ The mathematical strategy is coherent by inspection. Successful compilation of t
 
 ## Supporting learning notes and corrections
 
+| Command | What it introduces | How Lean treats it | Typical use |
+|---|---|---|---|
+| `def` | A named definition. | Lean can replace the name with its definition, but procedures such as instance search do not normally do this automatically. | Define a function or mathematical object, such as `oneLineNotation`. |
+| `abbrev` | A named definition marked for automatic unfolding. | Procedures such as instance search can replace the name with its definition automatically. | Give an existing type another name, such as `Permutation X := Equiv.Perm X`. |
+| `notation` | A way to write an existing expression. | Lean interprets the notation as that expression; no new definition is introduced. | Write `𝔖₃` for `Equiv.Perm (Fin 3)`. |
+
 ### Naming choices
 
 Lines 233–291 use `Permutation` in several signatures, while line 308 uses `SymmetricGroup` to emphasise the group-level construction.
