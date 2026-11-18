@@ -124,7 +124,7 @@ For a bijection `f : X ≃ Y`, the file uses the ordinary equivalence `f.permCon
 2. Distinguish an element, its collection and the group structure.
 3. Explain terms, types and equivalences.
 4. Show the explicit `inferInstance` example at line 137 and explain the meaning of its requested type.
-5. Contrast computation by unfolding with use of algebraic laws. Use the inverse law as the main example, with Proposition 5.1.3 as a short follow-up if space permits.
+5. Contrast computation by unfolding with use of algebraic laws. Use the inverse law as the main example and Proposition 5.1.3 as a short follow-up about preserving multiplication.
 6. Conclude why shared naming preserves the distinctions.
 
 **Limit:** availability of a structure alone does not establish that its operations match the textbook. Here the composition formula supplies the intended connection.
@@ -463,7 +463,7 @@ Refine the final recommendations after the language examples and graph passage a
 - [ ] Finalise guidance without implying unperformed experiments.
 - [ ] Verify cited lines against the pinned version before submission.
 
-**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has eight pages and includes the shared-type, transposition, graph and cycle observations. They are not published to GitHub by this notebook update.
+**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has seven pages and includes the shared-type, transposition, graph and cycle observations. They are not published to GitHub by this notebook update.
 
 **Writing conventions:** explain Lean notation for beginners; use compact file/line/context tables; label adapted code and omitted proofs. Show substantive proposed essay wording for approval before editing; a direct requested edit is already authorised.
 
