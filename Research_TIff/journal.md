@@ -28,7 +28,7 @@ Entries below preserve what was understood or planned at their recorded time. Ol
 | Generality and fidelity | Synthesise the distinct choices without claiming a universal AI tendency |
 | Prompting guidance | Planned conclusion grounded in those examples; no measured improvement claimed |
 
-The local essay currently develops the shared-type and cycle cases. The other rows are intended essay material still to develop, not claims that complete sections have already been written.
+The local essay now develops the shared-type, transposition, cycle-graph and cycle-construction cases. The language-mechanism comparison, synthesis and prompting guidance remain planned material.
 
 
 ## 18 October 2026 — Goals and next steps
@@ -510,6 +510,20 @@ No new Lean execution or mathematical experiment was performed in this reorganis
 Next, develop only the planned sections in the notebook's writing map, verify examples before making stronger claims, and present substantive essay wording for approval. Future reconsidered views should move here, while the notebook presents the latest accepted interpretation.
 
 
+
+
+### Essay update — transpositions and cycle graphs, 18 November
+
+At Tiffany's request, added the two observations from the current notebook to the local essay.
+
+- **Transpositions:** included the construction and complete squaring-theorem statement with an exposition-only proof placeholder. Explained decidable equality, the equal-input identity case, the advantage of a broader domain, and where genuine-transposition conditions remain necessary.
+- **Cycle graphs:** included the adjacency condition, full reachability–orbit statement with its proof omitted, and the identity and opposite-three-cycle examples. Explained which information is lost, what orbit information survives, weak versus directed connectivity, and the correspondence still needed for a formal directed formulation.
+- Kept these as different design choices: input-domain extension versus information-forgetting representation.
+- Converted the raw meeting-summary prose at the end of the local LaTeX file into actual sections and retained the unimplemented notation-comparison and prompting tasks as nonprinting comments.
+- Pinned the essay's source convention and Lean source link to the inspected commit rather than relying on changing main-branch line numbers.
+- Compiled with XeLaTeX and inspected the new and reflowed pages. The current local PDF has eight pages. No new Lean proof, counterexample test or graph bridge was compiled.
+
+The notebook writing map now marks the transposition and graph sections as developed in the local essay. Remaining writing work is the language-mechanism comparison, synthesis and final prompting guidance. The local essay remains unpublished on GitHub.
 
 ## Archive — Research notebook before the 18 November reorganisation
 
