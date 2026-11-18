@@ -45,6 +45,7 @@ These are files in Tiffany's fork. The annotated Permutaions_Tiff copy has diffe
 | Standalone Lean check of the counterexample | Started, then interrupted without a result: **not Lean-verified** |
 | Local essay | XeLaTeX compilation and page inspection; artifact validation, not new Lean proof verification |
 | Proposed language examples and prompt guidance | Not compiled or experimentally evaluated |
+| Group instance and selected permutation laws | Standalone Lean 4.28.0 check passed. See section 1 for scope and Mathlib revision. |
 | Directed/simple-graph correspondence | Explained mathematically; no newly compiled bridge theorem |
 | Restricted cycle wrapper | Proposed design; not implemented |
 
@@ -90,17 +91,40 @@ theorem perm_mul_inv {X : Type*} (a : Equiv.Perm X) :
   sorry
 ~~~
 
-The source uses mul_inv_cancel α. Mathlib is imported, the argument type identifies Equiv.Perm X, and instance search supplies the algebraic structure required by the general theorem. Both abbreviations unfold to that type and permit access to the same instance, Equiv.Perm.permGroup.
+### Where the structure is requested
 
-The composition theorem states (α * β) x = α (β x), proved by rfl: equality by unfolding definitions. Thus the right-hand permutation acts first.
+The file explicitly asks Lean to supply the group structure at line 137. [Basics.lean, lines 136–137](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L136-L137)
+
+~~~lean
+example {X : Type*} : Group (Equiv.Perm X) := inferInstance
+~~~
+
+The type after the colon describes what Lean must supply. The imported Mathlib instance `Equiv.Perm.permGroup` gives composition, the identity, inversion and the laws. Either abbreviation unfolds to `Equiv.Perm X`, so a request for `Group (SymmetricGroup X)` can use the same instance. This example checks availability. Lean makes independent instance requests when elaborating later expressions and theorem applications. [Mathlib instance definitions](https://github.com/leanprover-community/mathlib4/blob/8f9d9cff6bd728b17a24e163c9402775d9e6a365/Mathlib/Algebra/Group/End.lean#L66-L81) · [Lean reference on instance synthesis](https://lean-lang.org/doc/reference/latest/Type-Classes/Instance-Synthesis/)
+
+### An operation and its laws make different demands
+
+| Example | What Lean uses | Source |
+|---|---|---|
+| Composition at a point, `(α * β) x = α (β x)` | The definition of permutation multiplication. `rfl` checks that both sides agree after unfolding. The right-hand permutation acts first. | [182–183](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L182-L183) |
+| Associativity, `mul_assoc α β γ` | An instance of `Semigroup`, which supplies associative multiplication. Lean obtains it from the permutation group instance. | [186–187](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L186-L187) |
+| Identity laws, `one_mul α` and `mul_one α` | An instance of `MulOneClass`, which supplies multiplication, the identity and the two identity laws. | [190–193](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L190-L193) |
+| Inverse law, `mul_inv_cancel α` | An instance of `Group`. Lean infers the type from `α` and supplies the registered permutation group. | [219–223](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L219-L223) |
+
+Using the same two permutations in a composition formula and an algebraic argument is legitimate because they already belong to a collection with established laws under that operation. The ability to compose maps alone is insufficient. All functions from a set to itself can be composed and satisfy associativity and the identity laws, but a constant map on a two-element set has no inverse. For a permutation, the pointwise inverse identity can also be obtained directly from its inverse laws. The file chooses to reuse the general group theorem for the identity of permutations.
+
+### Proposition 5.1.3 checks compatibility with multiplication
+
+For a bijection `f : X ≃ Y`, the file uses the ordinary equivalence `f.permCongr` to exhibit the transported permutation on `Y`. The main construction at lines 248–249 uses `f.permCongrHom`, whose result type uses `≃*`. It gives a bijection of the two types of permutations together with a proof that the map preserves their multiplication. The notation `≃*` requires multiplication structures. With the known group structures on these types, the result is a group isomorphism. The preservation claim at lines 275–277 uses the already supplied proof via `.map_mul`. When `X = Y` and `f` is itself a permutation, lines 297–300 express the same map as the group product `f * σ * f⁻¹`. [Construction](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L248-L261) · [Multiplication preservation](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L274-L277) · [Same-type case](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L295-L300) · [Mathlib construction and its preservation proof](https://github.com/leanprover-community/mathlib4/blob/8f9d9cff6bd728b17a24e163c9402775d9e6a365/Mathlib/Algebra/Group/End.lean#L290-L297)
+
+**Verification.** A standalone check with Lean 4.28.0 and the local Mathlib checkout at `8f9d9cff6bd728b17a24e163c9402775d9e6a365` compiled successfully. It inspected the signatures of `mul_assoc` and `mul_inv_cancel`, synthesised the group through both names, and synthesised `Equiv.Perm.permGroup.toSemigroup` for the associativity case. It also checked the composition equation, the whole-permutation and pointwise inverse identities, and preservation of multiplication by `permCongrHom`. This verification covers the standalone examples.
 
 ### Paragraph sequence to write
 
 1. Pose the puzzle using the two abbreviations.
 2. Distinguish an element, its collection and the group structure.
 3. Explain terms, types and equivalences.
-4. Identify the imported instance and check composition order.
-5. Use the inverse law to explain retrieval.
+4. Show the explicit `inferInstance` example at line 137 and explain the meaning of its requested type.
+5. Contrast computation by unfolding with use of algebraic laws. Use the inverse law as the main example, with Proposition 5.1.3 as a short follow-up if space permits.
 6. Conclude why shared naming preserves the distinctions.
 
 **Limit:** availability of a structure alone does not establish that its operations match the textbook. Here the composition formula supplies the intended connection.
