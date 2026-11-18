@@ -945,6 +945,140 @@ These paths are in Tiffany's fork. Do not label this snapshot as a newly checked
 5. Update this notebook after substantive research findings and the journal on research days; consolidate rather than duplicate entries.
 
 
+
+## P5-012 — Meeting synthesis: generality, representation, and formalisation guidance
+
+**Recorded:** 18 November 2026.  
+**Origin:** Tiffany's meeting summary.  
+**Status:** Research direction supported by inspected examples; language-mechanism comparisons and prompting recommendations are preliminary, not completed experiments.  
+**Related:** P5-001, P5-005, P5-009 and P5-010.
+
+### Meeting objectives
+
+- Include examples of `notation`, `abbrev`, `def`, and optionally `macro` and `infix`.
+- Explain which circumstances favour each mechanism and compare advantages, costs and limitations.
+- Bring the transposition and directed-graph representation observations into the research synthesis alongside cycles.
+- Investigate how general constructions and results are specialised through hypotheses or separate property proofs.
+- Plan an essay conclusion giving evidence-based guidance on prompting AI for formalisation.
+
+This records the requested research plan. It does not authorise silently adding unreviewed essay sections or claim that every item has been experimentally evaluated.
+
+### 1. Definitions versus syntax: preliminary comparison and examples
+
+The distinction to investigate is between named mathematical definitions and ways of writing expressions. `def` and `abbrev` introduce named definitions; `abbrev` is reducible, while ordinary `def` is semireducible by default. Their bodies can be unfolded under appropriate transparency settings. Avoid saying that a `def` can never unfold automatically or that `abbrev` is a new mathematical type.
+
+| Mechanism | Example to study | When useful | Advantages | Costs and limitations |
+|---|---|---|---|---|
+| `def` | The project's `cyc` or `oneLineNotation` | Give a function or construction a reusable name | A named declaration with a type; convenient target for lemmas | A name does not guarantee an intended property; unfolding behaviour matters in automation |
+| `abbrev` | `Permutation X := Equiv.Perm X` | A transparent alternative name for an existing expression | Existing results and instances remain accessible through the alias | No new object kind or extra mathematical guarantees; weaker abstraction boundary |
+| `notation` | The project's `scoped notation "s[" i "]" => simpleTransposition i` | Match a mathematical writing convention | Makes formulas familiar; scoped notation helps manage ambiguity | Does not itself add a certified property; scope, parsing and display may hide the underlying expression |
+| `infix` / `infixl` / `infixr` | A small illustrative binary-operator notation for an existing function | Operator-shaped notation with chosen precedence/associativity | Concise expressions and controlled parsing | Associativity of parsing is not a proof of mathematical associativity; conflicting symbols or precedence can confuse |
+| `macro` | A small syntax abbreviation expanding into an existing term | Syntax patterns needing translation beyond a simple named alias | Flexible, reusable syntax expansion | Expansion must still elaborate and type-check; introduces syntax/debugging complexity, not a proof of the expansion's intended meaning |
+
+**Source examples in the fork:** [`abbrev Permutation`, line 97](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L97); [scoped simple-transposition notation, line 781](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L781); [`def cyc`, line 1004](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1004).
+
+Illustrative comparison examples below are proposed for a small separate experiment. They are **not** quoted from the repository and have **not** been compiled in this update:
+
+```lean
+def identityMap (X : Type*) : X → X := fun x => x
+
+abbrev PermAlias (X : Type*) := Equiv.Perm X
+
+local notation "P[" X "]" => Equiv.Perm X
+
+local infixl:65 " +++ " => Nat.add
+
+macro "twiceNat " t:term : term => `(Nat.add $t $t)
+```
+
+Read these as: define an identity function; introduce a transparent permutation-type alias; give the permutation type a local spelling; write an existing addition function using a binary operator; expand a syntax form into addition of the same expression twice. The functions chosen are intentionally simple so syntax and unfolding can be investigated separately from new mathematics.
+
+**Planned checks:** inspect elaborated expressions and inferred types; try instance retrieval for aliases; compare rewriting/unfolding; test local/scoped availability and ambiguous parses; examine macro expansion and error messages. These examples alone do not establish performance differences.
+
+**Official documentation consulted 18 November:**
+- [Definitions and abbreviations](https://lean-lang.org/doc/reference/latest/Definitions/Definitions/).
+- [Notation and macro overview](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/).
+- [Custom operators](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Custom-Operators/).
+- [Macros](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Macros/).
+
+These are current manual references; check compatibility with the project's pinned Lean version before testing examples. This comparison refines the simplified earlier learning-note table without erasing the historical note.
+
+### 2. Transpositions: a genuine extension of the allowed inputs
+
+At [line 600](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L600), `transposition i j` abbreviates `Equiv.swap i j` without requiring `i ≠ j`. When the arguments are equal, the output is the identity.
+
+The identities for exchanging the arguments, inversion and squaring (lines 620–633) remain valid in that case. Thus these statements cover more inputs than the textbook's definition of a genuine transposition.
+
+This supports the observation that some boundary cases can be included uniformly. It does **not** support omitting distinctness from every transposition result: support-cardinality and nontriviality claims must distinguish the equal-input case. The counting theorem uses `IsSwap`, rather than counting every constructed swap expression as a distinct transposition.
+
+**Essay task:** show the textbook assumption, the broader formal construction, and a theorem whose conclusion survives the added boundary case. Explain where genuine transposition conditions reappear.
+
+### 3. Directed cycle graphs: preservation of a property after forgetting information
+
+At [lines 482–488](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L482-L488), `cycleDigraph` is an undirected loopless `SimpleGraph`, despite the textbook's directed arcs and fixed-point loops.
+
+At [lines 510–511](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L510-L511), `cycleDigraph_connected_iff` equates graph reachability with membership in the same permutation orbit, expressed by an integer power.
+
+Removing direction and self-loops preserves the relevant orbit partition. It loses information about orientation and cannot distinguish a three-cycle from its inverse.
+
+**Qualification to the meeting summary:** a theorem on the simplified graph is not automatically a theorem about every notion of directed connectivity. If the desired directed statement concerns **weak** components, the relation to the underlying undirected graph is the needed bridge. For the finite permutation graph, **directed** reachability also runs around each finite cycle, so its strongly connected components agree with the orbits. This is a mathematical explanation, not a newly completed Lean bridge proof. Arbitrary directed graphs need not have this property.
+
+This is best classified as a representation reduction preserving a selected invariant, rather than a simple “more general theorem implies the specific theorem” argument. A formal result about the directed representation needs that representation and the transfer stated explicitly.
+
+**Essay task:** distinguish the represented graph, the property retained, and the correspondence needed to recover the intended directed claim. Do not suggest that the entire directed graph has been faithfully encoded by the simple graph.
+
+### 4. Cycles: general construction and explicit certification
+
+At line 1004, `cyc` returns a permutation for any input list. P5-010's repeated-entry example produces two disjoint transpositions and fails `IsCycle`.
+
+The theorem at lines 1032–1034 certifies `IsCycle` for distinct entries and length at least two. The later theorem at lines 1099–1100 explicitly takes a cycle proof; its chosen proof uses that hypothesis at line 1103.
+
+The artifact therefore separates construction from property proof. Describe this as an observable feature of the source, not evidence about what the AI “realised.” We have not reconstructed generation traces or established the intent of the producing agent.
+
+Construction identities need not first establish nontriviality. Cycle-specific theorems need the appropriate property proof, obtained from input conditions or other evidence. This remains the main cycle-section explanation; do not restore the removed intermediate-assumptions paragraph merely because the research notebook records the nuance.
+
+### 5. Working synthesis and limits of the claim about AI
+
+A useful working theme is **general constructions with explicit conditions for their intended interpretations**. The three examples are not identical:
+
+| Case | What broadens or changes | What must be checked |
+|---|---|---|
+| Swaps | Input domain admits equal arguments | Which conclusions survive the identity case, and where distinctness is required |
+| Cycle graph | Representation forgets orientation and loops | Which invariants survive and how the simplified result transfers |
+| Cycles | List construction returns arbitrary permutation shapes | Conditions and proofs ensuring a single nontrivial cycle |
+
+These cases motivate the hypothesis that the inspected formalisation favours reusable library constructions and facts that handle boundary cases uniformly. They do not establish a statistical tendency of AI systems, a universal strategy, or a semantic error. Compare with the paper's stated aims and, if claiming a general tendency, collect further cases and generation evidence.
+
+### 6. Planned concluding guidance for AI-assisted formalisation
+
+The eventual essay can turn these cases into practical prompting guidance. The following is a **draft agenda**, not a tested prompting intervention:
+
+1. State the intended audience and purpose: textbook exposition, reusable library development, statement translation, or a combination.
+2. Supply the source definition, all assumptions and boundary conventions, including distinctness, empty/singleton cases, indexing and allowed sizes.
+3. Ask the AI to distinguish mathematical definitions from aliases and syntax, and explain the choice of `def`, `abbrev`, notation or macros.
+4. If a construction is more general than the source, request an explicit explanation of the additional inputs, a source-compatible interface or theorem, and evidence connecting them.
+5. Require the intended properties explicitly in theorem hypotheses or certified outputs; do not rely on descriptive names.
+6. For representation changes, specify what information may be forgotten, what must be preserved, and what bridge theorem links the representations.
+7. Ask for the exact intended theorem statement before its proof, including the action of a specified map where relevant.
+8. Permit library reuse while requiring identification of imported constructions, preconditions, and whether the textbook argument remains visible.
+9. Request small counterexamples and boundary checks, plus actual Lean compilation of the final code, with sources and version information.
+10. Label explanation-only examples and proof placeholders; distinguish accepted code from source fidelity and from experiments not yet run.
+
+**Possible prompt fragment for later refinement:**
+
+> Formalise the supplied definition and theorem for a reader who knows the mathematics but is new to Lean. First state the intended objects, assumptions and boundary cases. If you reuse a more general library construction or change the representation, explain the difference, specify the conditions needed for the textbook interpretation, and state the connecting result. Use existing library proofs where appropriate, identify them, and keep the mathematical statement explicit. Explain naming and notation choices. Show the complete theorem statement before proving it, then compile the final code and report the actual checks performed.
+
+Before putting this guidance in the essay, select concise recommendations tied to our examples and make clear that their effectiveness has not yet been measured.
+
+### Immediate follow-up
+
+- Create a minimal, version-pinned comparison file for the five language mechanisms and compile it.
+- Prepare a focused transposition passage and graph passage with full source-labelled theorem statements.
+- State the graph correspondence precisely before claiming a directed theorem has been recovered.
+- Keep the current local essay unchanged until substantive proposed wording is approved.
+- Test the proposed prompting guidance only if adopted as an experiment; preserve prompts, outputs and evaluation criteria.
+
+
 ## Next reading session — historical plan from 3 November
 
 The current follow-up tasks are recorded in P5-011 above; the earlier plan is retained below as history.
