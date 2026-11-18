@@ -525,6 +525,18 @@ At Tiffany's request, added the two observations from the current notebook to th
 
 The notebook writing map now marks the transposition and graph sections as developed in the local essay. Remaining writing work is the language-mechanism comparison, synthesis and final prompting guidance. The local essay remains unpublished on GitHub.
 
+### Follow-up on permutation operations and group laws — 18 November
+
+Tiffany asked for a clearer account of when the formalisation uses composition directly, when it retrieves group structure, and whether the ability to compose functions justifies group laws. Read the pinned `AlgebraicCombinatorics/Permutations/Basics.lean` from the beginning through the conjugation material for Proposition 5.1.3 (lines 1–300). Cross-checked the local textbook statement and the local Mathlib definitions.
+
+The earlier description that the comparison file lacked an explicit group instance check was too broad. The annotated copy requests `Group (SymmetricGroup X)`, while the comparison file explicitly requests `Group (Equiv.Perm X)` at line 137. Both names refer to the same underlying type. [Comparison file, lines 136–137](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L136-L137)
+
+The relevant progression is the definition of multiplication (182–183), the associativity theorem with a semigroup requirement (186–187), and the inverse theorem with a group requirement (220). The conjugation construction also exhibits the distinction between a bijection of permutation types and a multiplication-preserving bijection (248–249 and 275–277). When the source and target coincide, the file expresses conjugation using group multiplication (297–300).
+
+Ran a standalone check with Lean 4.28.0 and the local Mathlib checkout at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`. Both group requests yielded `Equiv.Perm.permGroup` and the semigroup request yielded its semigroup structure. The composition, inverse and conjugation examples compiled successfully. The project module was inspected at the pinned source revision and the check ran against the local Mathlib build.
+
+Updated notebook section 1 with the precise source evidence and verification. Proposed wording for the essay in chat for review.
+
 ## Archive — Research notebook before the 18 November reorganisation
 
 This preserves the complete previous notebook, including its historical drafts, corrections, source records and earlier IDs. It is retained to avoid losing the reasoning behind revisions. **The current notebook supersedes it as the writing reference.** Statements inside reflect their earlier context and verification status.
