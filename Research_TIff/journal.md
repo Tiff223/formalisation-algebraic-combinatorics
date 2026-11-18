@@ -1,7 +1,7 @@
 # MA395 Research Journal
 
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 3 November 2026
+**Last updated:** 18 November 2026
 
 This journal records daily progress, decisions and next steps.
 
@@ -346,3 +346,58 @@ No compilation or publication of today's Lean draft was checked. No new mathemat
 ### Next session — 4 November
 
 Reread the three notations in detail, comparing the definitions with the textbook and testing small examples. Revisit the open cycle-digraph question without treating the preliminary impression as a final assessment. Proof completion for Proposition 5.1.3 remains optional.
+
+## 18 November 2026 — Essay development and cycle-construction analysis
+
+### Scope of this entry
+
+Retrospective consolidation of the research discussions and local essay work on 14–18 November, recorded on 18 November. This entry does not imply that all activities occurred today.
+
+### Completed since the previous journal update
+
+- Explained why `Permutation X` and `SymmetricGroup X` can both abbreviate `Equiv.Perm X`: distinguish a permutation term, its underlying type, and the separately registered group structure.
+- Inspected actual source examples of composition and inverse laws. Explained how imported instances supply the algebraic structure needed by general theorems.
+- Compared the annotated `Permutaions_Tiff/Basics.lean` copy with `Permutations/Basics.lean`. The illustrative `inferInstance` check in the annotated copy is absent from the comparison file; the essay now uses actual theorem examples from the latter.
+- Reviewed notation, cycle graphs, transpositions, and simple transpositions. Retained the cycle-graph lead without claiming a downstream error.
+- Inspected the cycle discussion at lines 983–1113 and counting subsection at 1115–1180 of the selected `Permutations/Basics.lean` version. Involutions start at line 1182; earlier references to line 1394 as the end of cycles were corrected.
+- Developed a repeated-entry counterexample: `cyc [0,1,2,0,3]` acts as `(1 2)(0 3)`, so the construction need not produce a single nontrivial cycle.
+- Distinguished properties of the general construction from results requiring a proof of `IsCycle`. Discussed `cyc_isCycle`, `cyc_apply_of_not_mem`, and `cycle_eq_transposition`.
+- Compared the construction with the textbook's distinct-entry definition, including its equivalent piecewise formula and its one-cycle convention.
+- Revised the local essay through user-approved changes, adding source/context tables and complete selected theorem statements with proofs replaced by `sorry` for exposition.
+- Set up VS Code with LaTeX Workshop. Corrected the unavailable code font, logical-symbol rendering, and compiler configuration; the document now builds with XeLaTeX.
+
+### Current essay
+
+The working master is the local file `/Users/liuaitian/Desktop/MA395/essay.tex`, with `essay.pdf` beside it. The latest compiled version has six pages. These files have not been published to GitHub as part of this update.
+
+The essay's two current themes are:
+1. The shared underlying type of permutations and symmetric groups, and retrieval of group structure.
+2. What a definition's name does not guarantee: general cycle construction, additional hypotheses, and textbook-facing alternatives.
+
+The paragraph introducing an “intermediate level of assumptions” was removed at Tiffany's request because it interrupted the section's main argument. The counting theorem was also replaced as the main example by a theorem explicitly taking a cycle proof.
+
+### Evidence and limits
+
+- The fork's Lean and textbook TeX sources were inspected. The source baseline is commit [`8ec0305`](https://github.com/Tiff223/formalisation-algebraic-combinatorics/commit/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912).
+- The repeated-entry example was checked mathematically and by evaluating the adjacent-swap product in Python on all four inputs: 0→3, 1→2, 2→1, 3→0.
+- A standalone Lean check of that example was started but interrupted before producing a result. No successful Lean compilation of the counterexample or the edited project module is claimed.
+- Successful XeLaTeX compilation and rendered-page inspection verify the essay artifact, not the validity of new Lean proof code.
+- No new semantic error in the source theorems was established. The cycle observation concerns the domain of a general construction, its naming, and the hypotheses needed for intended interpretations.
+
+### Decisions and collaboration
+
+- Maintain these GitHub Markdown files as the research records.
+- Update the journal on research days, consolidating multiple sessions on the same day; put lasting observations and evidence in the notebook.
+- Explain code in ordinary mathematics, define unfamiliar Lean terms, and record file paths, source lines, and context.
+- Show substantive proposed essay wording in chat and wait for Tiffany's approval before editing the essay. Directly requested edits, such as removing a paragraph, are already authorised.
+- Record completed work separately from proposals, mathematical calculations separately from Lean-checked results, and source observations separately from claims of translation errors.
+
+### Next steps
+
+1. Complete a reproducible Lean check of the repeated-entry counterexample and record the exact command, dependency version, and result.
+2. Keep the cycle section focused on construction versus certification; avoid accumulating tangential examples.
+3. Retain commit-based source links for cited lines and distinguish the fork, annotated copy, and upstream baseline.
+4. Continue source inspection at Tiffany's chosen pace; do not infer that all of Chapter 5 or the involution section has been reviewed.
+5. Revisit the cycle-graph representation and its downstream uses before assessing impact.
+
+See notebook findings P5-009–P5-011 for the detailed record.
