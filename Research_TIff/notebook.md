@@ -3,7 +3,7 @@
 **Topic:** Permutations and autoformalisation  
 **Supervisor:** Christian Ikenmeyer  
 **Established:** 26 October 2026  
-**Last updated:** 3 November 2026
+**Last updated:** 18 November 2026
 
 ## Purpose and working scope
 
@@ -795,7 +795,159 @@ Tiffany screened the definitions of two-line notation, one-line notation and the
 
 **Evidence status:** Student-reported preliminary screening, not a completed comparison or verification. The earlier assistant-suggested cycle-digraph issue in P5-001 remains open; today's impression neither confirms nor resolves it.
 
-## Next reading session
+
+## P5-009 — Shared permutation type and separately supplied group structure
+
+**Recorded:** 18 November 2026; consolidates discussions on 14–18 November.  
+**Status:** Source-based explanation; no new semantic error established.  
+**Related:** P5-005 and P5-006.
+
+### Mathematical distinction
+
+A permutation is one bijection. The underlying collection consists of all such bijections. The symmetric group is that collection equipped with composition, identity, inverse, and group laws.
+
+In Lean, an individual permutation is a term `σ : Equiv.Perm X`; `Equiv.Perm X` names the type. The abbreviations `Permutation X` and `SymmetricGroup X` both name this underlying type. They do not identify a single transformation with an entire group.
+
+The definition of the type packages invertible functions, not the external group structure on the type of those functions. Mathlib separately registers the operations and the group instance `Equiv.Perm.permGroup`. Once imported, the relevant instances can be retrieved through either abbreviation.
+
+### Concrete source evidence
+
+| Source | Lines | Role |
+|---|---|---|
+| [Basics.lean](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L5) | 5 | Imports Mathlib. |
+| [Abbreviations](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L97-L103) | 97, 103 | Both names abbreviate `Equiv.Perm X`. |
+| [Composition](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L182-L183) | 182–183 | `perm_mul_apply` identifies multiplication as function composition. |
+| [Inverse law](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L219-L223) | 220–223 | General inverse laws are applied to permutation elements. |
+
+Instance search supplies the algebraic structures required by the general theorem; no local `inferInstance` example is needed to activate them. General algebraic theorems may require less than the full group structure; describe the precise requirement where relevant rather than assuming every use of multiplication needs all group axioms.
+
+The explicit `example ... : Group (SymmetricGroup X) := inferInstance` occurs in the annotated copy previously inspected. It is **not** in this version of `Permutations/Basics.lean`. Earlier essay wording attributing that example to the comparison file was corrected.
+
+### Limits and significance
+
+Check the operation as well as the type: instance availability does not by itself show correspondence with the textbook. Here `perm_mul_apply` confirms the intended composition order. Naming differences alone are not mathematical errors.
+
+## P5-010 — A cycle construction does not certify the cycle property
+
+**Recorded:** 18 November 2026; consolidates discussions on 15–18 November.  
+**Status:** Source observation and independently calculated mathematical example; not yet a Lean-compiled experiment.  
+**Scope:** Cycles, lines 983–1113; related counting subsection, lines 1115–1180.
+
+### Construction, property, and counterexample
+
+At [line 1004](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1004), `cyc l` is defined as `l.formPerm` for an arbitrary list with decidable equality. It returns a permutation. It does not require duplicate-free entries or minimum length, and does not return a proof of `IsCycle`.
+
+A permutation is **constructed by** `cyc`; it does not “satisfy the definition cyc.” `IsCycle` is the property it may or may not satisfy.
+
+Mathlib's `List.formPerm` multiplies swaps of consecutive list entries. For the list `[0,1,2,0,3]` on `Fin 4`,
+
+$$
+\operatorname{cyc}[0,1,2,0,3]
+=(0\,1)(1\,2)(2\,0)(0\,3)
+=(1\,2)(0\,3).
+$$
+
+It maps 0↔3 and 1↔2, hence has two nontrivial orbits and fails `IsCycle`. Products act right to left.
+
+The repeated 0 would have two proposed successors under the textbook rule, so the distinctness hypothesis is essential to that interpretation. The library's swap-product construction remains well defined.
+
+**Validation:** checked the swap product mathematically and with Python on all four points. A temporary Lean test was started and interrupted without a result. Do not describe this as Lean-verified.
+
+### How the file controls later reasoning
+
+| Source | Lines | Conditions and consequence |
+|---|---|---|
+| [Empty and singleton cases](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1011-L1018) | 1013–1018 | Both construct the identity. |
+| [Certification](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1031-L1034) | 1032–1034 | `l.Nodup` and length at least two imply `(cyc l).IsCycle`. |
+| [Outside-list behaviour](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1022-L1024) | 1022–1024 | An element outside the list is fixed; no cycle proof needed. |
+| [Recursive identity](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1027-L1029) | 1027–1029 | Decomposes the general construction into a swap and the tail construction. |
+| [Support](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1048-L1053) | 1048–1053 | Under distinctness and length assumptions, support equals the listed collection. |
+| [Cycle theorem](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1099-L1113) | 1099–1113 | `cycle_eq_transposition` explicitly takes an `IsCycle` proof and support cardinality two. |
+
+At line 1103, `hσ.orderOf` invokes equality between cycle order and support cardinality. The counterexample moves four elements but has order two, showing why that library equality is not available merely from being an output of `cyc`.
+
+Do not claim that `IsCycle` is a logically minimal hypothesis for the *conclusion* that support size two implies a swap. The observation concerns the displayed theorem's interface and its chosen proof's use of a cycle-specific result.
+
+A cycle proof does not finish defining a permutation; it certifies a property of an already defined permutation. `cyc_isCycle` supplies that certificate from suitable list conditions. These cycle proofs are explicit mathematical hypotheses, unlike automatically retrieved group structures.
+
+### Intermediate assumptions — retained in notebook, omitted from essay
+
+The successor formula (1038–1040) and rotation theorem (1058–1060) require duplicate-free lists but no minimum length. Their conclusions hold for singleton lists, whose permutations are identities. This illustrates different levels of generality, but Tiffany requested removal of the paragraph from the essay because it distracted from the main argument. Do not reinsert it without agreement.
+
+### Textbook comparison and design alternatives
+
+The [textbook definition](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L310-L341) assumes distinct entries and gives successive-image and piecewise descriptions of the **same** definition.
+
+The textbook [explicitly treats the identity as the one-cycle](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L391-L395) on a nonempty set. Mathlib's `IsCycle` excludes it. Empty-list notation, singleton notation, and the resulting identity permutation should not be conflated with a nontrivial-cycle predicate.
+
+The current broad construction supports uniform identities and direct library reuse. Its naming can obscure the distinction between constructing a permutation and establishing the cycle property. This is an expository/domain issue, not by itself a false theorem.
+
+Two proposed alternatives, neither implemented:
+1. A restricted wrapper around `List.formPerm`, requiring distinctness and, for nontrivial cycles, length at least two; return the permutation with its cycle proof.
+2. A new construction from the textbook piecewise formula, with inverse laws or bijectivity, a cycle-property proof, and agreement with the library construction for reuse.
+
+Restrictions move proof obligations into the inputs and correctness proofs; they do not eliminate them. State the singleton convention explicitly.
+
+Mathlib's `IsCycleOn` is a broader property on a specified set, with empty and singleton cases; it does **not** require fixing all elements outside that set. Local library inspection found `List.Nodup.isCycleOn_formPerm` without a minimum-length assumption. This alternative was discussed, not implemented in the project.
+
+### Counting theorem — inspected but not the current essay example
+
+At [lines 1124–1133](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1124-L1133), the counted permutations are characterised directly by `σ.IsCycle ∧ σ.support.card = k`. Membership clauses give all and only those permutations; `cyc` is not used to specify the collection.
+
+The comments describe the ordered-list/rotation argument; the actual proof identifies cycle type `{k}` and invokes a library counting theorem at lines 1149–1173. This illustrates result fidelity versus expository fidelity, not a demonstrated mathematical error.
+
+Tiffany preferred `cycle_eq_transposition` as the essay's main example because it explicitly requires a cycle proof. Preserve that scope decision.
+
+## P5-011 — Inspection follow-up and essay working conventions
+
+**Recorded:** 18 November 2026.
+
+### Source scope and representation observations
+
+The earlier review of notation through simple transpositions included:
+- Two-line notation chooses a fixed top-row ordering rather than every textbook column ordering.
+- Equality theorems show that one-line and two-line lists determine the permutation; reconstruction checks the one-line round trip.
+- `transposition i j` accepts equal arguments and then gives the identity; `IsSwap` and the counting theorem impose genuine distinctness where needed.
+- `cycleSupport` at lines 1095–1096 accepts any permutation, despite its specialised name.
+- The existing cycle-graph lead P5-001 remains a representation change, not a proved downstream error: direction/loops are forgotten, while reachability is related to orbits. No graph repair or compiled counterexample has been produced.
+
+These are inspection observations. No exhaustive review of all of Chapter 5 is claimed.
+
+### Working artifact and editorial preferences
+
+- Master essay: local `/Users/liuaitian/Desktop/MA395/essay.tex`; compiled PDF beside it. It is not a GitHub-published essay as of this record.
+- Use XeLaTeX (the document uses `fontspec`), the bundled `lmmono10-regular.otf` code font, and a mathematical font for logical symbols.
+- The latest PDF has six pages, after shortening the textbook-construction discussion and adding the textbook's definition.
+- Explain unfamiliar Lean notation and mathematical roles for mathematicians new to Lean.
+- Use compact source tables with file, line range, context, and any display adaptations.
+- Show the full relevant theorem statement before analysis. In the essay only, use `sorry` to omit proofs and say explicitly that the source contains a proof. Such exposition is not a new Lean verification.
+- Prefer focused examples and brief construction comparisons. Explain why a theorem needs a property; avoid digressions that need their own explanation.
+- Present substantive proposed wording in chat and obtain approval before applying it. A direct instruction to perform a specific edit already authorises that edit.
+- Read the current file before editing because Tiffany also edits it directly.
+
+### Source version record
+
+Commit baseline for the inspected fork files: [`8ec0305ea7c8e191c26ce5f51c4a91affdf9f912`](https://github.com/Tiff223/formalisation-algebraic-combinatorics/commit/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912).
+
+| File | Blob SHA |
+|---|---|
+| `AlgebraicCombinatorics/Permutations/Basics.lean` | `51d68e8b5b0edacc00c3af5a95c035bf09d77ed1` |
+| `AlgebraicCombinatorics/tex/Permutations/Basics.tex` | `0982a062b4c7a0f7e6952ca3dac9df1d0a81ac3a` |
+
+These paths are in Tiffany's fork. Do not label this snapshot as a newly checked upstream version. Earlier annotated-copy references use a different path, line numbering, and blob. The local Mathlib files inspected are source evidence; their dependency revision has not been pinned in this update.
+
+### Open work
+
+1. Compile a self-contained Lean counterexample and record the outcome.
+2. Decide whether a restricted wrapper would be a useful future experiment; no implementation is authorised merely by discussing the design.
+3. Inspect downstream graph uses before judging the impact of P5-001.
+4. Keep statement fidelity, proof reuse, naming, and readability as distinct assessment criteria.
+5. Update this notebook after substantive research findings and the journal on research days; consolidate rather than duplicate entries.
+
+
+## Next reading session — historical plan from 3 November
+
+The current follow-up tasks are recorded in P5-011 above; the earlier plan is retained below as history.
 
 - On 4 November, revisit two-line notation, one-line notation and the cycle digraph in detail, comparing each with the textbook.
 - Check indexing, retained information and small examples; revisit P5-001 as an open lead.
