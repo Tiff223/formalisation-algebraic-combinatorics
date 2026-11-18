@@ -537,6 +537,12 @@ Ran a standalone check with Lean 4.28.0 and the local Mathlib checkout at `8f9d9
 
 Updated notebook section 1 with the precise source evidence and verification. Proposed wording for the essay in chat for review.
 
+### Essay revision on when group structure enters — 18 November
+
+Replaced the passage Tiffany supplied after she asked when the symmetric group structure enters the construction. The new text leads with the Mathlib import and the explicit instance check at lines 136–137. It contrasts the pointwise composition formula with the semigroup requirement for associativity and the group requirement for the inverse law. A constant self-map gives a contrast with invertible permutations. A short paragraph on Proposition 5.1.3 explains the role of multiplication preservation.
+
+The revised essay compiled with XeLaTeX and has seven pages. The graph source table and code excerpt were kept together after pagination changed. The Lean evidence remains the source inspection and standalone checks recorded in the preceding entry.
+
 ## Archive — Research notebook before the 18 November reorganisation
 
 This preserves the complete previous notebook, including its historical drafts, corrections, source records and earlier IDs. It is retained to avoid losing the reasoning behind revisions. **The current notebook supersedes it as the writing reference.** Statements inside reflect their earlier context and verification status.
