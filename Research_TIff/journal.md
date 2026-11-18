@@ -401,3 +401,32 @@ The paragraph introducing an “intermediate level of assumptions” was removed
 5. Revisit the cycle-graph representation and its downstream uses before assessing impact.
 
 See notebook findings P5-009–P5-011 for the detailed record.
+
+### Meeting summary and agreed research direction — 18 November
+
+Tiffany supplied a meeting summary and asked that it be included in the research records.
+
+**Agreed direction**
+
+1. Compare `notation`, `abbrev`, `def`, and, where useful, `macro` and `infix`. Use examples to explain when each is appropriate, what it changes, and its advantages, disadvantages and limitations.
+2. Develop the transposition and cycle-graph observations alongside the cycle-construction case.
+3. Investigate a working theme: the inspected formalisation often uses a general construction or a fact with fewer hypotheses, then supplies the conditions needed for a specific mathematical interpretation.
+4. End the eventual essay with practical guidance for people using AI to formalise mathematics, including what to specify in prompts.
+
+**Examples and qualifications**
+
+- The swap construction accepts equal arguments. Basic swap identities hold in that identity case as well as for distinct arguments. This is genuine generalisation of the domain; it does not mean that every theorem about genuine transpositions can omit distinctness.
+- The graph construction forgets direction and self-loops while retaining orbit components. This is a representation reduction whose adequacy depends on the property being studied, not automatically a stronger theorem about every graph.
+- The cycle construction can return a permutation with more than one nontrivial cycle. Later cycle-specific results explicitly require `IsCycle`; the file provides a theorem supplying that property under suitable list assumptions.
+
+The phrase “AI tends to prove more general facts” is retained as a research hypothesis suggested by these examples, not a measured general conclusion. The source shows separation of construction and property, but does not by itself establish what an AI agent understood or intended.
+
+For directed graphs, specify the notion of connectivity. Weak components correspond to components of the underlying undirected graph. In a finite permutation graph, directed reachability also follows the finite cycles, but a formal transfer requires an explicit correspondence; an arbitrary directed graph does not have the same strong and weak components.
+
+**Work completed in recording this meeting**
+
+Rechecked the relevant fork declarations at the existing commit baseline and consulted Lean's official reference on definitions, notation, custom operators and macros. Added notebook P5-012 with a comparison agenda, preliminary examples, a careful synthesis of the three cases, and draft prompting guidance. No new Lean experiment or essay edit was performed for this meeting update.
+
+**Next research tasks**
+
+Prepare and compile small comparison examples for the five mechanisms; document their types, expansions, scope and usability with existing instances. Clarify and, if needed, formalise the graph correspondence. Develop the proposed guidance from the evidence rather than claiming prompt improvements have already been tested. Present new essay wording for approval before applying it.
