@@ -2,7 +2,7 @@
 
 **Topic:** Representing textbook permutations in Lean  
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 18 November 2026  
+**Last updated:** 24 November 2026  
 **Audience:** Mathematicians familiar with sets, functions and groups, but new to Lean.
 
 This is the working reference for the **current final-essay plan**. It contains present conclusions, supporting examples, source locations, and clearly marked sections still to develop. It follows writing order, not discovery order.
@@ -22,7 +22,7 @@ The [research journal](journal.md) records the development of the ideas, superse
 | 3 | [Transpositions](#3-transpositions-generalising-the-input-domain) | Which textbook restriction can be omitted while some results remain true | Developed; in local essay |
 | 4 | [Cycle graphs](#4-cycle-graphs-preserving-orbits-after-forgetting-information) | What is lost, what survives, and how the directed formulation is connected | Developed; in local essay |
 | 5 | [Cycles](#5-cycles-construction-and-certification) | General construction versus proof of the intended property | Developed; in local essay |
-| 6 | [Synthesis](#6-synthesis-what-the-examples-support) | Distinguish generalisation, representation reduction and certification | Current interpretation; conclusion to draft |
+| 6 | [Synthesis](#6-synthesis-what-the-examples-support) | Explain why broader results are reusable and how they link back to the textbook | Developed; in local essay |
 | 7 | [Prompting guidance](#7-practical-guidance-for-ai-assisted-formalisation) | Practical recommendations tied to the examples | Planned ending; effectiveness not tested |
 
 “Developed” means explained for the essay, not newly verified by a Lean run. Verification is recorded separately below.
@@ -375,59 +375,29 @@ This explains a cycle-specific step in the selected proof. It does not claim tha
 
 The permutation was already fully defined by cyc. Certification establishes a property; it does not complete the definition. These are explicit mathematical hypotheses, unlike automatically retrieved group instances.
 
-### 5.6 Textbook definition and brief alternatives
-
-| Source | Context |
-|---|---|
-| [Basics.tex, 310–341](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L310-L341) | Cycle definition |
-| [Basics.tex, 391–395](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L391-L395) | One-cycle convention |
-
-For distinct i₁,…,iₖ in X, the permutation sends i₁→i₂→…→iₖ→i₁ and fixes all others. Equivalently, with iₖ₊₁=i₁,
-
-$$
-\operatorname{cyc}_{i_1,\ldots,i_k}(p)=
-\begin{cases}
-i_{j+1},&p=i_j\text{ for some }1\le j\le k,\\
-p,&p\notin\{i_1,\ldots,i_k\}.
-\end{cases}
-$$
-
-These are equivalent presentations of one definition.
-
-A direct construction could implement the formula and prove bijectivity and, for k≥2, IsCycle. A simpler alternative is a restricted wrapper around formPerm requiring input proofs and returning the permutation with its cycle proof. Neither alternative has been implemented in this research. Restrictions move proof obligations rather than removing them.
-
-The textbook recognises the identity as a one-cycle on a nonempty set; IsCycle excludes it. Empty/singleton input lists produce the identity. A formulation including those cases must state the convention; retain a list or specified set if singleton labels matter, since the permutation alone cannot distinguish [a] from [b].
-
 ### Paragraph sequence
 
 1. General construction and repeated-entry counterexample.
 2. Advantages and costs.
 3. A property of all constructed permutations versus a cycle-specific result.
 4. Full certification/later statements and explanations of proof parameters.
-5. Brief textbook definition, alternative interface and singleton convention.
+5. Explain the singleton convention and what information to retain when singleton labels matter.
 
 ## 6. Synthesis: what the examples support
 
-The present conclusion distinguishes four choices:
+**Status:** Drafted in the local essay as “Generality and the link to the textbook.”
 
-| Case | Choice | Evaluation question |
+Open with brief descriptions of the textbook constructions. Require distinct arguments for a transposition. Include an arrow from i to σ(i) in the permutation digraph, including a loop at each fixed point. Define a cycle by moving to the successor on a nonempty list of distinct entries and fixing elements outside the list. Moving to the predecessor gives the inverse. [Textbook cycle definition, Basics.tex, lines 310–341](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L310-L341).
+
+| Case | Advantage | How to recover the textbook statement |
 |---|---|---|
-| Permutation/group names | Transparent aliases of one type | Are element/type/structure roles and operations clear? |
-| Swaps | Broader input domain | Which claims survive equal inputs, and where is distinctness needed? |
-| Graphs | Simpler representation | Which information is lost, which property survives, and what bridge is needed? |
-| Cycles | Construction separated from certification | Which conditions establish the intended property, and where is it used? |
+| Swaps | One law covers distinct and equal inputs. A swap squares to the identity even when it swaps an element with itself. | Specialise the law to distinct arguments. |
+| Cycles | A single list construction and fixed-point theorem cover empty and singleton lists as well as lists yielding nontrivial cycles. | Apply `cyc_isCycle` to a duplicate-free list with at least two entries when a later theorem requires the cycle property. |
+| Graphs | The undirected simple graph suffices to recover the orbit partition. | Relate undirected connectivity to directed reachability. On a finite permutation orbit, forward iteration from any vertex reaches every other vertex. The inspected Lean section leaves this correspondence implicit. |
 
-These are local source-based findings. A general AI tendency toward greater generality is a hypothesis, not a statistical result. Generation traces have not been examined to establish an agent's reasoning.
+The common pattern is to prove a result for a broader construction or a simpler representation, then supply the hypotheses or establish the correspondence needed for the textbook statement. Reading the choices as deliberate explains their advantages. The evidence concerns these examples in this file. The research has yet to examine generation traces or test how commonly AI systems make these choices.
 
-Distinguish **semantic fidelity**, preserving mathematical meaning, from **expository fidelity**, following the textbook presentation. Library reuse can establish a result without displaying its argument locally. Compare with the project's stated purpose; the paper's objectives still need focused review.
-
-### What the essay may conclude
-
-- Names, notation and comments do not certify mathematical properties.
-- Correctness of a formal proof and fidelity of its statement to the source are separate evaluations.
-- Generality, representation changes and mathematical errors are distinct categories.
-- Greater local proof detail alone does not imply greater fidelity.
-- Broad constructions and restricted interfaces serve different purposes and audiences.
+When writing the conclusion, evaluate both the correctness of a formal result and the link between its statement and the textbook formulation. State what each construction changes, which results apply uniformly, and what work remains to recover the intended claim.
 
 ## 7. Practical guidance for AI-assisted formalisation
 
@@ -459,11 +429,11 @@ Refine the final recommendations after the language examples and graph passage a
 - [ ] Specify the directed-connectivity bridge; compile if implemented.
 - [ ] Compare the analysis with the paper's stated objectives.
 - [ ] Keep full relevant theorem statements before explanations.
-- [ ] Keep construction alternatives brief.
+- [x] Replace standalone construction alternatives with a brief textbook comparison in the synthesis.
 - [ ] Finalise guidance without implying unperformed experiments.
 - [ ] Verify cited lines against the pinned version before submission.
 
-**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has seven pages and includes the shared-type, transposition, graph and cycle observations. They are not published to GitHub by this notebook update.
+**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has seven pages and includes the shared-type, transposition, graph and cycle observations and the synthesis. They are not published to GitHub by this notebook update.
 
 **Writing conventions:** explain Lean notation for beginners; use compact file/line/context tables; label adapted code and omitted proofs. Show substantive proposed essay wording for approval before editing; a direct requested edit is already authorised.
 
