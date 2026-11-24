@@ -1,7 +1,7 @@
 # MA395 Research Journal
 
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 18 November 2026
+**Last updated:** 24 November 2026
 
 This journal records daily progress, decisions and next steps.
 
@@ -16,7 +16,7 @@ The [research notebook](notebook.md) contains detailed observations, mathematica
 
 Entries below preserve what was understood or planned at their recorded time. Old deadlines, code drafts and descriptions of notebook policy are historical. **The current policy, agreed 18 November, is: notebook = current essay material; journal = research history, revisions and deferred work.**
 
-## Current position — 18 November 2026
+## Current position — 24 November 2026
 
 | Topic | Current use |
 |---|---|
@@ -28,7 +28,7 @@ Entries below preserve what was understood or planned at their recorded time. Ol
 | Generality and fidelity | Synthesise the distinct choices without claiming a universal AI tendency |
 | Prompting guidance | Planned conclusion grounded in those examples; no measured improvement claimed |
 
-The local essay now develops the shared-type, transposition, cycle-graph and cycle-construction cases. The language-mechanism comparison, synthesis and prompting guidance remain planned material.
+The local essay develops the shared-type, transposition, cycle-graph and cycle-construction cases and synthesises the latter three. The language-mechanism comparison and prompting guidance remain planned material.
 
 
 ## 18 October 2026 — Goals and next steps
@@ -542,6 +542,42 @@ Updated notebook section 1 with the precise source evidence and verification. Pr
 Replaced the passage Tiffany supplied after she asked when the symmetric group structure enters the construction. The new text leads with the Mathlib import and the explicit instance check at lines 136–137. It contrasts the pointwise composition formula with the semigroup requirement for associativity and the group requirement for the inverse law. A constant self-map gives a contrast with invertible permutations. A short paragraph on Proposition 5.1.3 explains the role of multiplication preservation.
 
 The revised essay compiled with XeLaTeX and has seven pages. The graph source table and code excerpt were kept together after pagination changed. The Lean evidence remains the source inspection and standalone checks recorded in the preceding entry.
+
+## 24 November 2026 — From the three examples to a common argument
+
+Replaced the standalone textbook-definition and alternative-constructions passage with “Generality and the link to the textbook.” The earlier passage described direct cycle construction and a restricted wrapper in detail. The synthesis retains brief textbook comparisons and develops two advantages raised in discussion. A single theorem can cover boundary inputs, and a general result can be reused to establish a textbook specialisation.
+
+The essay distinguishes three routes. The swap law applies immediately to distinct inputs. The cycle construction has an explicit certification theorem, `cyc_isCycle`. The graph theorem establishes the orbit partition for the undirected simple graph. Recovering the directed result requires relating connectivity and reachability, a correspondence the inspected Lean section leaves implicit. Forward iteration around a finite orbit justifies the link mathematically.
+
+The local essay rebuilt successfully with XeLaTeX and renders as seven pages. This revision added no Lean implementation or compilation check.
+
+<details>
+<summary>Earlier notebook material on textbook cycles and alternative constructions</summary>
+
+#### 5.6 Textbook definition and brief alternatives
+
+| Source | Context |
+|---|---|
+| [Basics.tex, 310–341](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L310-L341) | Cycle definition |
+| [Basics.tex, 391–395](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/tex/Permutations/Basics.tex#L391-L395) | One-cycle convention |
+
+For distinct i₁,…,iₖ in X, the permutation sends i₁→i₂→…→iₖ→i₁ and fixes all others. Equivalently, with iₖ₊₁=i₁,
+
+$$
+\operatorname{cyc}_{i_1,\ldots,i_k}(p)=
+\begin{cases}
+i_{j+1},&p=i_j\text{ for some }1\le j\le k,\\
+p,&p\notin\{i_1,\ldots,i_k\}.
+\end{cases}
+$$
+
+These are equivalent presentations of one definition.
+
+A direct construction could implement the formula and prove bijectivity and, for k≥2, IsCycle. A simpler alternative is a restricted wrapper around formPerm requiring input proofs and returning the permutation with its cycle proof. Neither alternative has been implemented in this research. Restrictions move proof obligations rather than removing them.
+
+The textbook recognises the identity as a one-cycle on a nonempty set; IsCycle excludes it. Empty/singleton input lists produce the identity. A formulation including those cases must state the convention; retain a list or specified set if singleton labels matter, since the permutation alone cannot distinguish [a] from [b].
+
+</details>
 
 ## Archive — Research notebook before the 18 November reorganisation
 
