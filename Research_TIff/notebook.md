@@ -2,7 +2,7 @@
 
 **Topic:** Representing textbook permutations in Lean  
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 24 November 2026  
+**Last updated:** 25 November 2026  
 **Audience:** Mathematicians familiar with sets, functions and groups, but new to Lean.
 
 This is the working reference for the **current final-essay plan**. It contains present conclusions, supporting examples, source locations, and clearly marked sections still to develop. It follows writing order, not discovery order.
@@ -18,7 +18,7 @@ The [research journal](journal.md) records the development of the ideas, superse
 | Order | Topic | What to explain | Current position |
 |---|---|---|---|
 | 1 | [Permutations and symmetric groups](#1-permutations-and-symmetric-groups-a-shared-underlying-type) | Shared underlying type and retrieval of group structure | Developed; in local essay |
-| 2 | [Definitions and notation](#2-choosing-def-abbrev-notation-infix-or-macro) | When to use def, abbrev, notation, infix and macro; benefits and limits | Planned expansion; examples need compilation |
+| 2 | [Definitions and notation](#2-choosing-abbrev-def-or-notation) | How to choose a transparent name, a named construction, or familiar notation | Examples checked; essay proposal for review |
 | 3 | [Transpositions](#3-transpositions-generalising-the-input-domain) | Which textbook restriction can be omitted while some results remain true | Developed; in local essay |
 | 4 | [Cycle graphs](#4-cycle-graphs-preserving-orbits-after-forgetting-information) | What is lost, what survives, and how the directed formulation is connected | Developed; in local essay |
 | 5 | [Cycles](#5-cycles-construction-and-certification) | General construction versus proof of the intended property | Developed; in local essay |
@@ -129,53 +129,27 @@ For a bijection `f : X ≃ Y`, the file uses the ordinary equivalence `f.permCon
 
 **Limit:** availability of a structure alone does not establish that its operations match the textbook. Here the composition formula supplies the intended connection.
 
-## 2. Choosing def, abbrev, notation, infix or macro
+## 2. Choosing abbrev, def or notation
 
-**Purpose:** Add a concise comparison to explain what a naming or notation choice does and does not change. This is planned essay material, with examples still to test.
+**Status:** Source examples selected and checked in Lean for a new essay section. Proposed wording is for review before editing the local master.
 
-| Mechanism | When useful | Advantage | Cost or limitation |
-|---|---|---|---|
-| def | Name a function or construction, e.g. cyc | Reusable declaration with a type and associated lemmas | The name guarantees no extra property; unfolding behaviour matters |
-| abbrev | A transparent alternative name, e.g. Permutation | Existing results/instances are accessible through unfolding | No new mathematical kind or stronger guarantee; weaker abstraction boundary |
-| notation | A familiar way to write an expression | Matches textbook formulas; local/scoped control | Can hide the expression; scope and ambiguity need care |
-| infix / infixl / infixr | Operator notation for a binary operation | Concise formulas with explicit parsing conventions | Parsing associativity is not a proof of mathematical associativity |
-| macro | Translate a syntax pattern into other syntax | Flexible syntactic abstraction | Expansion must elaborate and type-check; extra syntax/debugging complexity |
+The practical question is whether the reader needs an alternative name for something Lean should look through readily, a named rule for a construction, or a familiar way to write a term. Use the same permutation setting across all three examples.
 
-Ordinary def is semireducible by default; abbrev is reducible. Both can unfold under appropriate conditions. Avoid an absolute claim that def cannot unfold automatically.
+| Choice | What the author wants | Project example and explanation |
+|---|---|---|
+| `abbrev` | Give an existing type a short name while keeping its existing operations easy for Lean to find. | `Sn n` is the type of permutations of the positions from 0 to n−1. Same underlying type as `Equiv.Perm (Fin n)`. [Basics.lean, line 134](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L134) |
+| `def` | Give a construction or calculation a name so later statements can refer to what it does. | `simpleTransposition i` defines the swap of neighbouring positions i and i+1. `oneLineNotation` is also a definition, since it computes the list of images in order. [Basics.lean, lines 776–778](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L776-L778), [lines 396–397](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L396-L397) |
+| `notation` | Give an expression a familiar written form. | With the notation in scope, `s[i]` is read as `simpleTransposition i`. Explain that the construction already exists and the bracket form can be useful in repeated formulas. [Basics.lean, line 781](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L781) |
 
-### Project examples
+A close comparison uses the identical right-hand side for an abbreviation and a separate illustrative ordinary definition. Both can be opened to reveal the same permutation type. Lean looks through the abbreviation when finding the existing group structure. When it does not open the ordinary definition during that search, exposing the right-hand side explicitly lets it find the existing structure.
 
-| Source | Example |
-|---|---|
-| [Basics.lean, 97](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L97) | abbrev Permutation |
-| [Basics.lean, 1004](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L1004) | def cyc |
-| [Basics.lean, 781](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L781) | Simple-transposition notation |
+For the exposition, contrast the role of the phrase “one-line notation” in mathematics with the Lean command. The function takes a permutation and computes a list. The bracket notation tells Lean how to read an expression. Use the adjacent swap on positions 1 and 2 in a four-position permutation to illustrate the list [0, 2, 1, 3].
 
-~~~lean
-scoped notation "s[" i "]" => simpleTransposition i
-~~~
+**Verification:** A standalone check compiled with Lean 4.28.0 and local Mathlib at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, using the individual Mathlib imports needed by these excerpts. It confirmed that Lean finds the group structure through `Sn`, that automatic lookup fails for the same-body `def` until the underlying type is exposed, and that `s[i]` gives the same permutation as `simpleTransposition i` once the notation is in scope. Both ways of writing the four-position adjacent swap gave the one-line list [0, 2, 1, 3].
 
-The notation gives an existing construction a spelling; it does not construct a different mathematical object or prove its properties.
+**Further planned work:** Infix and macro were part of the earlier research plan. Keep them out of the requested three-command guide. Revisit them separately if useful, using source examples and verified syntax.
 
-**Present evaluation:** textbook-style names can help textbook readers; standard library names can help Lean users recognise and reuse objects. Choose by audience and explain the correspondence.
-
-### Illustrative experiments to prepare
-
-These are drafts, not source quotations and not compiled examples:
-
-~~~lean
-def identityMap (X : Type*) : X → X := fun x => x
-abbrev PermAlias (X : Type*) := Equiv.Perm X
-local notation "P[" X "]" => Equiv.Perm X
-local infixl:65 " +++ " => Nat.add
-macro "twiceNat " t:term : term => `(Nat.add $t $t)
-~~~
-
-They respectively name an identity function, alias the permutation type, provide local notation, introduce an addition operator and expand syntax to addition of an expression twice.
-
-**Before final drafting:** compile against the project's pinned toolchain; inspect types, expansions, instance retrieval, scope and parsing; retain only examples serving the essay. No performance comparison is established.
-
-**References:** [Definitions](https://lean-lang.org/doc/reference/latest/Definitions/Definitions/), [notation/macros](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/), [operators](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Custom-Operators/), [macros](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Macros/).
+**References:** [Lean Language Reference, Definitions](https://lean-lang.org/doc/reference/latest/Definitions/Definitions/) and [Notations](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Notations/).
 
 ## 3. Transpositions: generalising the input domain
 
@@ -424,7 +398,7 @@ Refine the final recommendations after the language examples and graph passage a
 ## Final-essay preparation checklist
 
 - [ ] Compile the repeated-entry counterexample as a standalone Lean example.
-- [ ] Compile and compare language examples against the pinned toolchain.
+- [x] Compile and compare the three selected language examples against the pinned toolchain.
 - [x] Draft source-labelled transposition and graph passages.
 - [ ] Specify the directed-connectivity bridge; compile if implemented.
 - [ ] Compare the analysis with the paper's stated objectives.
