@@ -589,6 +589,8 @@ The earlier experiment plan used unrelated toy examples and included infix opera
 
 After approval, added the guide after the shared-type section, with compact source tables for the three code excerpts. XeLaTeX rebuilt the local draft successfully. The guide is on page 3 of the eight-page PDF.
 
+The follow-up asked how to choose between an abbreviation and notation when either could express the same thing. Prepared two side-by-side examples for the guide. A standalone Lean 4.28.0 check confirmed that the name `Perms 4` and the bracket form `P[4]` produce the same permutation type with the same group structure available, and that an illustrative alias `adjacentSwap i` agrees with the existing notation `s[i]` for permutations of four positions. The proposed LaTeX addition compiled in a temporary copy. The master awaits wording review.
+
 ## Archive — Research notebook before the 18 November reorganisation
 
 This preserves the complete previous notebook, including its historical drafts, corrections, source records and earlier IDs. It is retained to avoid losing the reasoning behind revisions. **The current notebook supersedes it as the writing reference.** Statements inside reflect their earlier context and verification status.
