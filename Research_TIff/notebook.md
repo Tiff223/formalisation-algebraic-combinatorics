@@ -147,6 +147,12 @@ For the exposition, contrast the role of the phrase “one-line notation” in m
 
 **Verification:** A standalone check compiled with Lean 4.28.0 and local Mathlib at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, using the individual Mathlib imports needed by these excerpts. It confirmed that Lean finds the group structure through `Sn`, that automatic lookup fails for the same-body `def` until the underlying type is exposed, and that `s[i]` gives the same permutation as `simpleTransposition i` once the notation is in scope. Both ways of writing the four-position adjacent swap gave the one-line list [0, 2, 1, 3].
 
+### Proposed comparison for the end of the guide
+
+Use the same expression on both sides of the comparison. In an illustrative example, `abbrev Perms (n : Nat) := Equiv.Perm (Fin n)` introduces a name that can also be used on its own as the rule assigning a permutation type to each natural number. The illustrative declaration `local notation "P[" n "]" => Equiv.Perm (Fin n)` lets a reader write the same type in brackets within the place the notation is enabled. Lean 4.28.0 checked that `Perms 4` and `P[4]` are the same type and that it finds the group structure through both spellings. This shows that automatic lookup does not distinguish a transparent abbreviation from notation for this expression.
+
+A second comparison pairs an illustrative abbreviation `adjacentSwap i` for the existing `simpleTransposition i` with the project's actual `s[i]` notation. Lean checked their equality on four positions with the notation enabled. The choice depends on whether a descriptive name helps someone recognise the operation or the textbook symbol makes repeated formulas easier to read. [Basics.lean, lines 776–781](https://github.com/Tiff223/formalisation-algebraic-combinatorics/blob/8ec0305ea7c8e191c26ce5f51c4a91affdf9f912/AlgebraicCombinatorics/Permutations/Basics.lean#L776-L781).
+
 **Further planned work:** Infix and macro were part of the earlier research plan. Keep them out of the requested three-command guide. Revisit them separately if useful, using source examples and verified syntax.
 
 **References:** [Lean Language Reference, Definitions](https://lean-lang.org/doc/reference/latest/Definitions/Definitions/) and [Notations](https://lean-lang.org/doc/reference/latest/Notations-and-Macros/Notations/).
