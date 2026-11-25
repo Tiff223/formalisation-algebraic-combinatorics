@@ -147,7 +147,7 @@ For the exposition, contrast the role of the phrase “one-line notation” in m
 
 **Verification:** A standalone check compiled with Lean 4.28.0 and local Mathlib at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, using the individual Mathlib imports needed by these excerpts. It confirmed that Lean finds the group structure through `Sn`, that automatic lookup fails for the same-body `def` until the underlying type is exposed, and that `s[i]` gives the same permutation as `simpleTransposition i` once the notation is in scope. Both ways of writing the four-position adjacent swap gave the one-line list [0, 2, 1, 3].
 
-### Proposed comparison for the end of the guide
+### Side-by-side comparison in the local essay
 
 Use the same expression on both sides of the comparison. In an illustrative example, `abbrev Perms (n : Nat) := Equiv.Perm (Fin n)` introduces a name that can also be used on its own as the rule assigning a permutation type to each natural number. The illustrative declaration `local notation "P[" n "]" => Equiv.Perm (Fin n)` lets a reader write the same type in brackets within the place the notation is enabled. Lean 4.28.0 checked that `Perms 4` and `P[4]` are the same type and that it finds the group structure through both spellings. A further check proved equality of the two inferred group structures by `rfl`. Printing definitions with notation display disabled showed `Perms 4` for the named form and `Equiv.Perm (Fin 4)` for the bracket form. Explain that the two have the same meaning in this example. The abbreviation gives a name that can be retained and used on its own, while the bracket declaration changes how Lean reads the written expression. `local` limits the availability of this particular spelling.
 
@@ -413,7 +413,7 @@ Refine the final recommendations after the language examples and graph passage a
 - [ ] Finalise guidance without implying unperformed experiments.
 - [ ] Verify cited lines against the pinned version before submission.
 
-**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has eight pages and includes the three-command guide on page 3, the shared-type, transposition, graph and cycle observations, and the synthesis. They are not published to GitHub by this notebook update.
+**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has nine pages. The three-command guide is on page 3 and its two side-by-side comparisons are on page 4. It also includes the shared-type, transposition, graph and cycle observations, and the synthesis. They are not published to GitHub by this notebook update.
 
 **Writing conventions:** explain Lean notation for beginners; use compact file/line/context tables; label adapted code and omitted proofs. Show substantive proposed essay wording for approval before editing; a direct requested edit is already authorised.
 
