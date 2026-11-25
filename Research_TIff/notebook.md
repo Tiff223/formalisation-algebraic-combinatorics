@@ -18,7 +18,7 @@ The [research journal](journal.md) records the development of the ideas, superse
 | Order | Topic | What to explain | Current position |
 |---|---|---|---|
 | 1 | [Permutations and symmetric groups](#1-permutations-and-symmetric-groups-a-shared-underlying-type) | Shared underlying type and retrieval of group structure | Developed; in local essay |
-| 2 | [Definitions and notation](#2-choosing-abbrev-def-or-notation) | How to choose a transparent name, a named construction, or familiar notation | Examples checked; essay proposal for review |
+| 2 | [Definitions and notation](#2-choosing-abbrev-def-or-notation) | How to choose a transparent name, a named construction, or familiar notation | Developed; in local essay |
 | 3 | [Transpositions](#3-transpositions-generalising-the-input-domain) | Which textbook restriction can be omitted while some results remain true | Developed; in local essay |
 | 4 | [Cycle graphs](#4-cycle-graphs-preserving-orbits-after-forgetting-information) | What is lost, what survives, and how the directed formulation is connected | Developed; in local essay |
 | 5 | [Cycles](#5-cycles-construction-and-certification) | General construction versus proof of the intended property | Developed; in local essay |
@@ -131,7 +131,7 @@ For a bijection `f : X ≃ Y`, the file uses the ordinary equivalence `f.permCon
 
 ## 2. Choosing abbrev, def or notation
 
-**Status:** Source examples selected and checked in Lean for a new essay section. Proposed wording is for review before editing the local master.
+**Status:** Developed in the local essay as “Choosing between abbrev, def, and notation.” Three short source excerpts are labelled with their file, line and context.
 
 The practical question is whether the reader needs an alternative name for something Lean should look through readily, a named rule for a construction, or a familiar way to write a term. Use the same permutation setting across all three examples.
 
@@ -407,7 +407,7 @@ Refine the final recommendations after the language examples and graph passage a
 - [ ] Finalise guidance without implying unperformed experiments.
 - [ ] Verify cited lines against the pinned version before submission.
 
-**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has seven pages and includes the shared-type, transposition, graph and cycle observations and the synthesis. They are not published to GitHub by this notebook update.
+**Working artifact:** /Users/liuaitian/Desktop/MA395/essay.tex and essay.pdf. The current compiled draft has eight pages and includes the three-command guide on page 3, the shared-type, transposition, graph and cycle observations, and the synthesis. They are not published to GitHub by this notebook update.
 
 **Writing conventions:** explain Lean notation for beginners; use compact file/line/context tables; label adapted code and omitted proofs. Show substantive proposed essay wording for approval before editing; a direct requested edit is already authorised.
 
