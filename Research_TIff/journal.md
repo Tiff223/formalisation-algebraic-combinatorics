@@ -21,14 +21,14 @@ Entries below preserve what was understood or planned at their recorded time. Ol
 | Topic | Current use |
 |---|---|
 | Shared permutation/symmetric-group type | Explain terms, types and separately retrieved group structure |
-| def, abbrev, notation, infix, macro | Source examples for the three-command guide selected; infix and macro remain further work |
+| def, abbrev, notation, infix, macro | Three-command guide added to the local essay; infix and macro remain further work |
 | Transpositions | Show broader swap inputs and identities valid in the identity case |
 | Directed cycle graphs | Explain information loss and preservation of orbit components; specify the required bridge |
 | Cycles | Main construction-versus-certification case, including repeated-entry counterexample |
 | Generality and fidelity | Synthesise the distinct choices without claiming a universal AI tendency |
 | Prompting guidance | Planned conclusion grounded in those examples; no measured improvement claimed |
 
-The local essay develops the shared-type, transposition, cycle-graph and cycle-construction cases and synthesises the latter three. The language-mechanism comparison and prompting guidance remain planned material.
+The local essay develops the shared-type, transposition, cycle-graph and cycle-construction cases and synthesises the latter three. The essay also includes the guide to abbrev, def and notation. Prompting guidance remains planned material.
 
 
 ## 18 October 2026 — Goals and next steps
@@ -585,7 +585,9 @@ The supervisor asked for practical guidance on choosing `abbrev`, `def` or `nota
 
 A standalone check compiled with Lean 4.28.0 and local Mathlib at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, using the individual Mathlib imports needed by these excerpts. It confirmed that Lean finds the group structure through `Sn`, that automatic lookup fails for the same-body `def` until the underlying type is exposed, and that `s[i]` gives the same permutation as `simpleTransposition i` once the notation is in scope. Both ways of writing the four-position adjacent swap gave the one-line list [0, 2, 1, 3].
 
-The earlier experiment plan used unrelated toy examples and included infix operators and macros. The proposed section focuses on the three commands requested and uses the permutation file throughout. The toy examples were planning notes and were not compiled. Essay wording will be shown for review before the local source is changed.
+The earlier experiment plan used unrelated toy examples and included infix operators and macros. The proposed section focuses on the three commands requested and uses the permutation file throughout. The toy examples were planning notes and were not compiled. The essay wording was shown for review before the local source was changed.
+
+After approval, added the guide after the shared-type section, with compact source tables for the three code excerpts. XeLaTeX rebuilt the local draft successfully. The guide is on page 3 of the eight-page PDF.
 
 ## Archive — Research notebook before the 18 November reorganisation
 
