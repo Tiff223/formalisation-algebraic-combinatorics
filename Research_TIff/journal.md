@@ -1,7 +1,7 @@
 # MA395 Research Journal
 
 **Supervisor:** Christian Ikenmeyer  
-**Last updated:** 24 November 2026
+**Last updated:** 25 November 2026
 
 This journal records daily progress, decisions and next steps.
 
@@ -16,12 +16,12 @@ The [research notebook](notebook.md) contains detailed observations, mathematica
 
 Entries below preserve what was understood or planned at their recorded time. Old deadlines, code drafts and descriptions of notebook policy are historical. **The current policy, agreed 18 November, is: notebook = current essay material; journal = research history, revisions and deferred work.**
 
-## Current position — 24 November 2026
+## Current position — 25 November 2026
 
 | Topic | Current use |
 |---|---|
 | Shared permutation/symmetric-group type | Explain terms, types and separately retrieved group structure |
-| def, abbrev, notation, infix, macro | Planned comparison with examples, use cases and limitations |
+| def, abbrev, notation, infix, macro | Source examples for the three-command guide selected; infix and macro remain further work |
 | Transpositions | Show broader swap inputs and identities valid in the identity case |
 | Directed cycle graphs | Explain information loss and preservation of orbit components; specify the required bridge |
 | Cycles | Main construction-versus-certification case, including repeated-entry counterexample |
@@ -578,6 +578,14 @@ A direct construction could implement the formula and prove bijectivity and, for
 The textbook recognises the identity as a one-cycle on a nonempty set; IsCycle excludes it. Empty/singleton input lists produce the identity. A formulation including those cases must state the convention; retain a list or specified set if singleton labels matter, since the permutation alone cannot distinguish [a] from [b].
 
 </details>
+
+## 25 November 2026 — Choosing abbreviations, definitions and notation
+
+The supervisor asked for practical guidance on choosing `abbrev`, `def` or `notation`. Inspected the pinned source declarations for `Sn` (line 134), `oneLineNotation` (lines 396–397), `simpleTransposition` (lines 776–778), and `s[i]` (line 781). The adjacent-swap definition and its bracket notation demonstrate two different choices for the same mathematical operation. The group lookup gives an observable comparison between an abbreviation and an ordinary definition of the same permutation type.
+
+A standalone check compiled with Lean 4.28.0 and local Mathlib at `8f9d9cff6bd728b17a24e163c9402775d9e6a365`, using the individual Mathlib imports needed by these excerpts. It confirmed that Lean finds the group structure through `Sn`, that automatic lookup fails for the same-body `def` until the underlying type is exposed, and that `s[i]` gives the same permutation as `simpleTransposition i` once the notation is in scope. Both ways of writing the four-position adjacent swap gave the one-line list [0, 2, 1, 3].
+
+The earlier experiment plan used unrelated toy examples and included infix operators and macros. The proposed section focuses on the three commands requested and uses the permutation file throughout. The toy examples were planning notes and were not compiled. Essay wording will be shown for review before the local source is changed.
 
 ## Archive — Research notebook before the 18 November reorganisation
 
